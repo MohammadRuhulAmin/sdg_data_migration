@@ -70,6 +70,28 @@ def row_modification(position_index):
     except Exception as E:
         print(str(E))
 
+def update_survey_id():
+    cursor_survey_id = mydb_connection_destinationdb.cursor()
+    try:
+        query_get_survy_info = """SELECT id,name FROM ind_data_source_survey;"""
+        cursor_survey_id.execute(query_get_survy_info)
+        survey_data =cursor_survey_id.fetchall()
+        for data in survey_data:
+            id = data[0]
+            name = data[1]
+            query_getting_ids = """SELECT GROUP_CONCAT(id) AS id_list FROM ind_sources 
+            WHERE `name` LIKE  %s;"""
+            cursor_survey_id.execute(query_getting_ids,(f"{name}%",))
+            list_id = cursor_survey_id.fetchall()[0][0]
+            query_update_survay_id = """UPDATE ind_sources SET survey_id = %s
+            WHERE FIND_IN_SET(id,%s)"""
+            cursor_survey_id.execute(query_update_survay_id, ((id, list_id,)))
+            mydb_connection_destinationdb.commit()
+
+        print("Survey Data updated Successfully!")
+    except Exception as E:
+        print(str(E))
+
 
 def update_office_agencies_id():
     cursor_office_agencies = mydb_connection_destinationdb.cursor()
@@ -140,6 +162,7 @@ def update_ministry_id():
             WHERE `name` LIKE  %s;"""
             cursor_ministry.execute(query_getting_ids, (f"%{name}%",))
             list_id = cursor_ministry.fetchall()[0][0]
+            print(list_id)
             query_update_ministry_id = """UPDATE ind_sources SET ministry_id = %s
             WHERE FIND_IN_SET(id,%s)"""
             cursor_ministry.execute(query_update_ministry_id, ((id, list_id,)))
@@ -154,10 +177,10 @@ def update_ministry_id():
 
 
 if __name__ == "__main__":
-    # insert_source_name()
-    # update_ministry_id()
-    #update_ministry_division_id()
+    insert_source_name()
+    update_ministry_id()
+    update_ministry_division_id()
     update_office_agencies_id()
-
+    update_survey_id()
     mydb_connection_sourcedb.close()
     mydb_connection_destinationdb.close()
