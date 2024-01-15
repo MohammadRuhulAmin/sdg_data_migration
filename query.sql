@@ -1,0 +1,1 @@
+SELECT * FROM ministries WHERE LOWER(REPLACE(`name`, ' ', '')) = 'ministryofland';
