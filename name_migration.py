@@ -74,7 +74,27 @@ def update_ministry_division_id():
 
     try:
         cursor_ministry_division_id = mydb_connection_destinationdb.cursor()
+        query_get_ministry_division_info = """SELECT id,ministry_id,name FROM ministry_divisions;"""
+        cursor_ministry_division_id.execute(query_get_ministry_division_info)
+        ministry_division_id_data =  cursor_ministry_division_id.fetchall()
 
+        for min_div_data in ministry_division_id_data:
+            id = min_div_data[0]
+            minstriy_id = min_div_data[1]
+            name = min_div_data[2]
+            print(id,minstriy_id,name)
+            query_getting_ids = """
+            SELECT GROUP_CONCAT(id) AS id_list FROM ind_sources
+            WHERE ministry_id = %s AND name LIKE %s;
+            """
+            cursor_ministry_division_id.execute(query_getting_ids,(minstriy_id,f"%{name}%",))
+            list_id = cursor_ministry_division_id.fetchall()[0][0]
+            print(list_id)
+            query_update_ministry_id = """UPDATE ind_sources SET ministry_division_id = %s
+            WHERE FIND_IN_SET(id,%s)"""
+            cursor_ministry_division_id.execute(query_update_ministry_id, ((id, list_id,)))
+            mydb_connection_destinationdb.commit()
+        print("ministry_division_id data updated successfully!")
     except Exception as E:
         print(str(E))
 
@@ -92,7 +112,7 @@ def update_ministry_id():
             cursor_ministry.execute(query_getting_ids, (f"%{name}%",))
             list_id = cursor_ministry.fetchall()[0][0]
             query_update_ministry_id = """UPDATE ind_sources SET ministry_id = %s
-                        WHERE FIND_IN_SET(id,%s)"""
+            WHERE FIND_IN_SET(id,%s)"""
             cursor_ministry.execute(query_update_ministry_id, ((id, list_id,)))
             mydb_connection_destinationdb.commit()
 
@@ -105,7 +125,10 @@ def update_ministry_id():
 
 
 if __name__ == "__main__":
-    insert_source_name()
-    update_ministry_id()
+    # insert_source_name()
+    # update_ministry_id()
+    update_ministry_division_id()
+
+
     mydb_connection_sourcedb.close()
     mydb_connection_destinationdb.close()
