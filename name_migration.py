@@ -70,6 +70,35 @@ def row_modification(position_index):
     except Exception as E:
         print(str(E))
 
+
+def update_office_agencies_id():
+    cursor_office_agencies = mydb_connection_destinationdb.cursor()
+    try:
+        query_get_office_agencies_info = """SELECT id,ministry_id,division_id,name FROM office_agencies WHERE 
+        division_id != 0 """
+        cursor_office_agencies.execute(query_get_office_agencies_info)
+        office_agencies_data = cursor_office_agencies.fetchall()
+        for agency_data in office_agencies_data:
+            id = agency_data[0]
+            ministry_id = agency_data[1]
+            division_id = agency_data[2]
+            name = agency_data[3]
+            query_getting_ids = """
+            SELECT GROUP_CONCAT(id) as id_list FROM ind_sources
+            WHERE ministry_id = %s and ministry_division_id = %s
+            AND name LIKE %s
+            """
+            cursor_office_agencies.execute(query_getting_ids,(ministry_id,division_id,f"%{name}%",))
+            list_id = cursor_office_agencies.fetchall()[0][0]
+            query_update_office_agency_id = """
+            UPDATE ind_sources SET office_agency_id = %s
+            WHERE FIND_IN_SET(id,%s)
+            """
+            cursor_office_agencies.execute(query_update_office_agency_id,((id,list_id,)))
+            mydb_connection_destinationdb.commit()
+        print("office_agency_id data updated successfully!")
+    except Exception as E:
+        print(str(E))
 def update_ministry_division_id():
 
     try:
@@ -127,8 +156,8 @@ def update_ministry_id():
 if __name__ == "__main__":
     # insert_source_name()
     # update_ministry_id()
-    update_ministry_division_id()
-
+    #update_ministry_division_id()
+    update_office_agencies_id()
 
     mydb_connection_sourcedb.close()
     mydb_connection_destinationdb.close()
