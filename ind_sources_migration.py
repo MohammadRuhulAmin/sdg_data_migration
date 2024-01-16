@@ -87,7 +87,6 @@ def update_survey_id():
             WHERE FIND_IN_SET(id,%s)"""
             cursor_survey_id.execute(query_update_survay_id, ((id, list_id,)))
             mydb_connection_destinationdb.commit()
-
         print("Survey Data updated Successfully!")
     except Exception as E:
         print(str(E))
