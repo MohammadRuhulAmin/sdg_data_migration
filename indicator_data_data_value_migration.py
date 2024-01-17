@@ -88,6 +88,7 @@ def get_mapped_data_from_source():
             s.name,
             dis.name;
         """
+
         for serial_no in serial_no_list:
             cursor_mapped_data.execute(query_mapped,(serial_no[0],))
             rows = cursor_mapped_data.fetchall()

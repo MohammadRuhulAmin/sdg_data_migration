@@ -38,3 +38,21 @@ GROUP BY
 
 
 
+
+
+SELECT
+	#sdg_indicator_langs sil
+	sil.serial_no serial_no,
+	#sdg_indicator_data ind_data
+	ind_data.indicator_id indicator_id,
+	ind_data.time_period_id time_period_id,
+	#sdg_indicator_data_children sidc
+	sidc.sdg_disaggregation_id disaggregation_id,
+	sidc.value `value`,
+	#sdg_time_periods tp
+	tp.name
+FROM sdg_indicator_data ind_data
+LEFT JOIN sdg_indicator_data_children sidc ON sidc.id = ind_data.indicator_id
+LEFT JOIN sdg_time_periods tp ON tp.id = ind_data.time_period_id
+LEFT JOIN sdg_indicator_langs sil ON sil.indicator_id = ind_data.indicator_id;
+
