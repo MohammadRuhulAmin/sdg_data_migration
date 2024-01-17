@@ -27,6 +27,28 @@ def get_serial_no_from_sdg_indicator_langs():
     except Exception as E:
         print(str(E))
 
+
+def uat_data_operation(serial,value):
+    try:
+        cursor_uat = mydb_connection_destinationdb.cursor()
+        query_find_indicator_data = """
+        SELECT indicator_id FROM sdg_indicator_details 
+        WHERE indicator_number = %s;
+        """
+        cursor_uat.execute(query_find_indicator_data,(serial,))
+        indicator_id = cursor_uat.fetchall()[0][0]
+        #print(indicator_id[0][0],serial,value)
+
+        update_value_query = """
+        UPDATE indicator_data SET data_value = %s
+        WHERE id = %s
+        """
+        cursor_uat.execute(update_value_query,(value,indicator_id,))
+        print("id->",indicator_id, "data_value->",value,"serial_no->",serial," has been updated!")
+        mydb_connection_destinationdb.commit()
+
+    except Exception as E:
+        print(str(E))
 def get_mapped_data_from_source():
     try:
         serial_no_list = get_serial_no_from_sdg_indicator_langs()
@@ -68,13 +90,27 @@ def get_mapped_data_from_source():
         """
         for serial_no in serial_no_list:
             cursor_mapped_data.execute(query_mapped,(serial_no[0],))
-            data = cursor_mapped_data.fetchall()
-            print(data)
+            rows = cursor_mapped_data.fetchall()
+            for row in rows:
+                serial = row[5]
+                value = row[3]
+                uat_data_operation(serial,value)
+
 
 
     except Exception as E:
         print(str(E))
 
 
+
+# work flow:
+
+# step 1: get serial_no from sdg_indicator_langs
+# step 2: get value data from given query using serial_no
+# step 3: get indicator_id from sdg_indicator_details using serial_no
+# step 4: update data_value where id = indicator_id in indicator_data table
+
 if __name__ == "__main__":
     get_mapped_data_from_source()
+    mydb_connection_sourcedb.close()
+    mydb_connection_destinationdb.close()
