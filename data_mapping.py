@@ -89,6 +89,7 @@ def insert_date_destination_indicator_disagg_data(serial_no,disagg_name):
             SELECT id,name FROM disaggregation_name 
             WHERE `name` like %s;
             """
+
             cursor_destination.execute(query_disagg_name,(f"%{disagg_name}%",))
             disagg_details =  cursor_destination.fetchall()
             for disagg_delt in disagg_details:
@@ -102,8 +103,6 @@ def insert_date_destination_indicator_disagg_data(serial_no,disagg_name):
                 cursor_destination.execute(query_insert_indicator_disagg_data,(ind_data_id,disagg_id,disagg_name))
                 mydb_connection_destinationdb.commit()
                 print("data inserted on indicator_disagg_data ",ind_data_id,disagg_id,disagg_name)
-
-
 
     except Exception as E:
         print(str(E))
