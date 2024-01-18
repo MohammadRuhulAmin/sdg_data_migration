@@ -50,7 +50,6 @@ def get_mapped_data_from_source_db():
 
 def insert_data_destination_indicator_data(serial_no,time_name,value):
     try:
-        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cursor_destination = mydb_connection_destinationdb.cursor()
         #getting indicator_id using indicator_no from sdg_indicator_details
         query_get_serial_no = """
@@ -61,54 +60,71 @@ def insert_data_destination_indicator_data(serial_no,time_name,value):
         indicator_info = cursor_destination.fetchall()
         for info in indicator_info:
             indicator_id = info[0]
-            #22
-            upsert_query = """
-            INSERT INTO indicator_data (ind_id,ind_def_id,source_id,provider_id,approver_id,publisher_id,
-            sent_for_approval_date,approved_date,published_date,data_period,raw_data_json,data_value,
-            remarks,status,is_archived,created_at,created_by,updated_at,updated_by)
-            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON DUPLICATE KEY UPDATE
-            id = %s;
-            """
             update_query = """
-            
             UPDATE indicator_data SET data_period = %s, data_value = %s
             WHERE id = %s
             """
             if_only_update = (time_name,value,indicator_id,)
-            if_upsert = (0,0,0,0,0,0,0,None,None,time_name,None,value,
-                         None,0,0,current_date,0,current_date,0,
-                        indicator_id,)
-            cursor_destination.execute(update_query,(if_upsert))
-
-
+            cursor_destination.execute(update_query,(if_only_update))
             mydb_connection_destinationdb.commit()
-            print("updated on table indicator_data", indicator_id,time_name,value)
+            print("updated on indicator_data", indicator_id,time_name,value)
     except Exception as E:
         print(str(E))
 
+def insert_date_destination_indicator_disagg_data(serial_no,disagg_name):
+    try:
+        cursor_destination = mydb_connection_destinationdb.cursor()
+        # getting indicator_id using indicator_no from sdg_indicator_details
+        query_get_serial_no = """
+                SELECT indicator_id,indicator_number from sdg_indicator_details 
+                WHERE indicator_number = %s;
+                """
+        cursor_destination.execute(query_get_serial_no, (serial_no,))
+        indicator_info = cursor_destination.fetchall()
+        for row in indicator_info:
+            indicator_id = row[0]
+            serial_no = row[1]
+            #getting id of disagg_name
+            query_disagg_name = """
+            SELECT id,name FROM disaggregation_name 
+            WHERE `name` like %s;
+            """
+            cursor_destination.execute(query_disagg_name,(f"%{disagg_name}%",))
+            disagg_details =  cursor_destination.fetchall()
+            for disagg_delt in disagg_details:
+                disagg_id = disagg_delt[0] #disagg_id
+                disagg_name = disagg_delt[1] #disagg_name
+                ind_data_id = indicator_id #ind_data_id
+                query_insert_indicator_disagg_data = """
+                INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name)
+                VALUES(%s,%s,%s)
+                """
+                cursor_destination.execute(query_insert_indicator_disagg_data,(ind_data_id,disagg_id,disagg_name))
+                mydb_connection_destinationdb.commit()
+                print("data inserted on indicator_disagg_data ",ind_data_id,disagg_id,disagg_name)
+
+
+
+    except Exception as E:
+        print(str(E))
 
 def insert_mapped_data_to_destination_db():
     try:
         mapped_data = get_mapped_data_from_source_db()
         for row in mapped_data:
-            disaggregation_id = row[3]
-            indicator_id = row[1]
-            time_name = row[5]
             serial_no = row[0]
+            indicator_id = row[1]
+            time_period_id = row[2]
+            disaggregation_id = row[3]
             value = row[4]
+            time_name = row[5]
+            disagg_name = row[6]
             if disaggregation_id == 1:
                 insert_data_destination_indicator_data(serial_no,time_name,value)
-            # serial_no = row[0]
-            #
-            # time_period_id = row[2]
-            # disaggregation_id = row[3]
-            #disagg_name = row[6]
-
+            else:
+                insert_date_destination_indicator_disagg_data(serial_no,disagg_name)
     except Exception as E:
         print(str(E))
-
-
 
 
 
