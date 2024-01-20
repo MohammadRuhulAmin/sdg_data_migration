@@ -16,6 +16,7 @@ mydb_connection_destinationdb = mysql.connector.connect(
     database="uat_sdg_tracker_clone"
 )
 
+
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
@@ -64,11 +65,22 @@ def get_mapped_data(serial_no_list):
             sidc.sdg_disaggregation_id,
             sidc.value,tp.name,sdl.name;
         """
+        information = []
         for serial_no in serial_no_list:
             cursor_source.execute(query,(serial_no,))
             results = cursor_source.fetchall()
             for row in results:
-                print(row)
+                serial_no = row[0]
+                indicator_id = row[1]
+                time_period_id = row[2]
+                disaggregation_id = row[3]
+                value = row[4]
+                time_name = row[5]
+                disagg_name = row[6]
+                information.append([indicator_id,disaggregation_id,disagg_name])
+                print(indicator_id,disaggregation_id,disagg_name)
+
+
 
 
 
@@ -79,6 +91,11 @@ def get_mapped_data(serial_no_list):
 
 #step 1: get unique serial_no from sdg_indicator_langs
 #step 2: get mapped data from different table using query by using serial_no from step1
+#step 3: insert disagg_name,disagg_id and ind_def_id in uat.ind_def_disagg table. Ind_def_id = ind_definations.id where ind_id = indicator_id
+
+#step 4:
+#       from step2 if disaggregation_id == 1 then data_period and data_value will be inserted in uat.indicator_data table
+#       else data will be inserted in uat.indicator_disagg_data table
 
 if __name__ == "__main__":
     serial_no_list = get_serial_no_from_exist_db()
