@@ -124,7 +124,7 @@ def insert_mapped_data_to_destination_db():
                 continue
                 # insert_data_destination_indicator_data(serial_no,time_name,value)
             else:
-                print(disagg_name,value)
+                print("")
                 # insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
     except Exception as E:
         print(str(E))

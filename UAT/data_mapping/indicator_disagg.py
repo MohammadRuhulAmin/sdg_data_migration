@@ -15,6 +15,67 @@ mydb_connection_destinationdb = mysql.connector.connect(
     password="ruhulamin",
     database="uat_sdg_tracker_clone"
 )
+def insert_data_destination_indicator_data(serial_no,time_name,value):
+    try:
+        cursor_destination = mydb_connection_destinationdb.cursor()
+        #getting indicator_id using indicator_no from sdg_indicator_details
+        query_get_serial_no = """
+        SELECT indicator_id,indicator_number from sdg_indicator_details 
+        WHERE indicator_number = %s;
+        """
+        cursor_destination.execute(query_get_serial_no,(serial_no,))
+        indicator_info = cursor_destination.fetchall()
+        for info in indicator_info:
+            indicator_id = info[0]
+            update_query = """
+            UPDATE indicator_data SET data_period = %s, data_value = %s
+            WHERE id = %s
+            """
+            if_only_update = (time_name,value,indicator_id,)
+            cursor_destination.execute(update_query,(if_only_update))
+            mydb_connection_destinationdb.commit()
+            print("updated on indicator_data", indicator_id,time_name,value)
+    except Exception as E:
+        print(str(E))
+
+
+def insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value):
+    try:
+        if value is None:value = 0
+
+        cursor_destination = mydb_connection_destinationdb.cursor()
+        # getting indicator_id using indicator_no from sdg_indicator_details
+        query_get_serial_no = """
+                SELECT indicator_id,indicator_number from sdg_indicator_details 
+                WHERE indicator_number = %s;
+                """
+        cursor_destination.execute(query_get_serial_no, (serial_no,))
+        indicator_info = cursor_destination.fetchall()
+        for row in indicator_info:
+            indicator_id = row[0]
+            serial_no = row[1]
+            #getting id of disagg_name
+            query_disagg_name = """
+            SELECT id,name FROM disaggregation_name 
+            WHERE `name` like %s;
+            """
+
+            cursor_destination.execute(query_disagg_name,(f"%{disagg_name}%",))
+            disagg_details =  cursor_destination.fetchall()
+            for disagg_delt in disagg_details:
+                disagg_id = disagg_delt[0] #disagg_id
+                disagg_name = disagg_delt[1] #disagg_name
+                ind_data_id = indicator_id #ind_data_id
+                query_insert_indicator_disagg_data = """
+                INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
+                VALUES(%s,%s,%s,%s)
+                """
+                cursor_destination.execute(query_insert_indicator_disagg_data,(ind_data_id,disagg_id,disagg_name,value))
+                mydb_connection_destinationdb.commit()
+                print("data inserted on indicator_disagg_data ",ind_data_id,disagg_id,disagg_name)
+
+    except Exception as E:
+        print(str(E))
 
 
 def unique_nested_array(nested_array):
@@ -122,6 +183,19 @@ def operation_mapped_data(serial_no_list):
             cursor_source.execute(query,(serial_no,))
             results = cursor_source.fetchall()
             for row in results:
+                indicator_id = row[1]
+                disaggregation_id = row[3]
+                disagg_name = row[6]
+                nested_array.append([indicator_id,disaggregation_id,disagg_name])
+
+        unique_defination_data = unique_nested_array(nested_array)
+        # insert disagg_name,disagg_id and ind_def_id in uat.ind_def_disagg table. Ind_def_id = ind_definations.id where ind_id = indicator_id
+        insert_disagg_info_ind_def_disagg(unique_defination_data)
+
+        for serial_no in serial_no_list:
+            cursor_source.execute(query, (serial_no,))
+            results = cursor_source.fetchall()
+            for row in results:
                 serial_no = row[0]
                 indicator_id = row[1]
                 time_period_id = row[2]
@@ -129,11 +203,11 @@ def operation_mapped_data(serial_no_list):
                 value = row[4]
                 time_name = row[5]
                 disagg_name = row[6]
-                nested_array.append([indicator_id,disaggregation_id,disagg_name])
+                if disaggregation_id == 1:
+                    insert_data_destination_indicator_data(serial_no,time_name,value)
+                else:
+                    insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
 
-        unique_defination_data = unique_nested_array(nested_array)
-        # insert disagg_name,disagg_id and ind_def_id in uat.ind_def_disagg table. Ind_def_id = ind_definations.id where ind_id = indicator_id
-        insert_disagg_info_ind_def_disagg(unique_defination_data)
 
 
 
@@ -147,7 +221,7 @@ def operation_mapped_data(serial_no_list):
 #step 3: insert disagg_name,disagg_id and ind_def_id in uat.ind_def_disagg table. Ind_def_id = ind_definations.id where ind_id = indicator_id
 
 #step 4:
-#       from step2 if disaggregation_id == 1 then data_period and data_value will be inserted in uat.indicator_data table
+#        if disaggregation_id == 1 then data_period and data_value will be inserted in uat.indicator_data table
 #       else data will be inserted in uat.indicator_disagg_data table
 
 if __name__ == "__main__":
