@@ -121,9 +121,11 @@ def insert_mapped_data_to_destination_db():
             time_name = row[5]
             disagg_name = row[6]
             if disaggregation_id == 1:
-                insert_data_destination_indicator_data(serial_no,time_name,value)
+                continue
+                # insert_data_destination_indicator_data(serial_no,time_name,value)
             else:
-                insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
+                print(disagg_name,value)
+                # insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
     except Exception as E:
         print(str(E))
 
