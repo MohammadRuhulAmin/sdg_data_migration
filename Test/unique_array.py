@@ -8,11 +8,13 @@ information = [
     [2, 3, 'Category B']
 ]
 
-# Convert each sublist to a tuple and use a set to track unique tuples
-unique_tuples_set = set(tuple(subarray) for subarray in information)
+def unique_nested_array(information):
+    try:
+        unique_tuples_set = set(tuple(subarray) for subarray in information)
+        unique_information = [list(t) for t in unique_tuples_set]
+        return unique_information
+    except Exception as E:
+        return str(E)
 
-# Create a new array with unique subarrays
-unique_information = [list(t) for t in unique_tuples_set]
 
-# Display the result
-print(unique_information)
+print(unique_nested_array(information))
