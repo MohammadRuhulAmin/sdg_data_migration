@@ -17,6 +17,15 @@ mydb_connection_destinationdb = mysql.connector.connect(
 )
 
 
+def unique_nested_array(nested_array):
+    try:
+        unique_tuples_set = set(tuple(subarray) for subarray in nested_array)
+        unique_information = [list(t) for t in unique_tuples_set]
+        return unique_information
+    except Exception as E:
+        return str(E)
+
+
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
@@ -65,7 +74,7 @@ def get_mapped_data(serial_no_list):
             sidc.sdg_disaggregation_id,
             sidc.value,tp.name,sdl.name;
         """
-        information = []
+        nested_array = []
         for serial_no in serial_no_list:
             cursor_source.execute(query,(serial_no,))
             results = cursor_source.fetchall()
@@ -77,8 +86,10 @@ def get_mapped_data(serial_no_list):
                 value = row[4]
                 time_name = row[5]
                 disagg_name = row[6]
-                information.append([indicator_id,disaggregation_id,disagg_name])
-                print(indicator_id,disaggregation_id,disagg_name)
+                nested_array.append([indicator_id,disaggregation_id,disagg_name])
+
+        unique_defination_data = unique_nested_array(nested_array)
+        print(unique_defination_data)
 
 
 
