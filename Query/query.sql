@@ -37,9 +37,7 @@ GROUP BY
     dis.name;
 
 
-
-
-
+# mapped query
 SELECT
 	#sdg_indicator_langs sil
 	sil.serial_no serial_no,
