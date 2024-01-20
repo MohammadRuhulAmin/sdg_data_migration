@@ -1,3 +1,12 @@
+
+**Data Migration of uat.data_period**  
+##Step1: replace year to varchar(100) in year column.
+
+----------------------------------------------------------------
+
+
+
+**Data Migration of uat.indicator_data and uat.indicator_disagg_data table**  
 ##STEP1:  
 	Get Necessary Data From Existing Database. The necessary parameters are:
 	sdg_inidcator_langs.serial_no, sdg_indicator_data.indicator_id,
