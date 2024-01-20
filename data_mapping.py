@@ -71,8 +71,10 @@ def insert_data_destination_indicator_data(serial_no,time_name,value):
     except Exception as E:
         print(str(E))
 
-def insert_date_destination_indicator_disagg_data(serial_no,disagg_name):
+def insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value):
     try:
+        if value is None:value = 0
+
         cursor_destination = mydb_connection_destinationdb.cursor()
         # getting indicator_id using indicator_no from sdg_indicator_details
         query_get_serial_no = """
@@ -97,10 +99,10 @@ def insert_date_destination_indicator_disagg_data(serial_no,disagg_name):
                 disagg_name = disagg_delt[1] #disagg_name
                 ind_data_id = indicator_id #ind_data_id
                 query_insert_indicator_disagg_data = """
-                INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name)
-                VALUES(%s,%s,%s)
+                INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
+                VALUES(%s,%s,%s,%s)
                 """
-                cursor_destination.execute(query_insert_indicator_disagg_data,(ind_data_id,disagg_id,disagg_name))
+                cursor_destination.execute(query_insert_indicator_disagg_data,(ind_data_id,disagg_id,disagg_name,value))
                 mydb_connection_destinationdb.commit()
                 print("data inserted on indicator_disagg_data ",ind_data_id,disagg_id,disagg_name)
 
@@ -121,7 +123,7 @@ def insert_mapped_data_to_destination_db():
             if disaggregation_id == 1:
                 insert_data_destination_indicator_data(serial_no,time_name,value)
             else:
-                insert_date_destination_indicator_disagg_data(serial_no,disagg_name)
+                insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
     except Exception as E:
         print(str(E))
 

@@ -171,10 +171,6 @@ def update_ministry_id():
         print(str(E))
 
 
-
-
-
-
 if __name__ == "__main__":
     insert_source_name()
     update_ministry_id()
