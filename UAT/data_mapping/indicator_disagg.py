@@ -139,7 +139,6 @@ def insert_disagg_info_ind_def_disagg(unique_defination_data):
                     cursor_dest.execute(insert_ind_def_disagg,(ind_id,ind_def_id,disagg_id,disagg_name,))
                     mydb_connection_destinationdb.commit()
                     print("Inserted in ind_def_disagg:  ",ind_id,ind_def_id,disagg_id,disagg_name)
-
             except Exception as E:
                 continue
 
