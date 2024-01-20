@@ -26,6 +26,7 @@ mydb_connection_exist_uat = mysql.connector.connect(
 
 def existing_sdg_time_periods_to_uat_data_period():
     try:
+        periods = []
         cursor_sdg_time_periods = mydb_connection_exist_uat.cursor()
         query_mapped_data = """
         SELECT temp.old_name
@@ -46,11 +47,27 @@ def existing_sdg_time_periods_to_uat_data_period():
         cursor_sdg_time_periods.execute(query_mapped_data)
         time_periods = cursor_sdg_time_periods.fetchall()
         for name in time_periods:
-            print(name[0])
-
+            periods.append(name[0])
+        return periods
     except Exception as E:
         print(str(E))
 
 
+def insert_time_period_in_uat_data_period():
+    try:
+        data_period_list = existing_sdg_time_periods_to_uat_data_period()
+        cursor_dest = mydb_connection_destinationdb.cursor()
+        query = """
+        INSERT INTO uat_sdg_tracker_clone.data_period(name)
+        values(%s);
+        """
+        for data_period in data_period_list:
+            cursor_dest.execute(query,(data_period,))
+            mydb_connection_destinationdb.commit()
+            print("inserted: ",data_period)
+
+    except Exception as E:
+        print(str(E))
+
 if __name__ == "__main__":
-    existing_sdg_time_periods_to_uat_data_period()
+    insert_time_period_in_uat_data_period()
