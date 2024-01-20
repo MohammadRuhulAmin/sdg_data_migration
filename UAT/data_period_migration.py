@@ -52,7 +52,6 @@ def existing_sdg_time_periods_to_uat_data_period():
     except Exception as E:
         print(str(E))
 
-
 def insert_time_period_in_uat_data_period():
     try:
         data_period_list = existing_sdg_time_periods_to_uat_data_period()

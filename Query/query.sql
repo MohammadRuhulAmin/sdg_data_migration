@@ -54,3 +54,21 @@ LEFT JOIN sdg_indicator_data_children sidc ON sidc.id = ind_data.indicator_id
 LEFT JOIN sdg_time_periods tp ON tp.id = ind_data.time_period_id
 LEFT JOIN sdg_indicator_langs sil ON sil.indicator_id = ind_data.indicator_id;
 
+
+# data_period column migration from ext.sdg_time_periods to uat.data_period
+
+SELECT temp.old_name
+        # ,temp.new_name
+        FROM (
+            SELECT
+                o.name COLLATE utf8_unicode_ci old_name,
+                n.name COLLATE utf8_unicode_ci new_name
+            FROM
+                sdg_v1_v2_live.sdg_time_periods o
+            LEFT JOIN
+                uat_sdg_tracker_clone.data_period n ON n.name COLLATE utf8_unicode_ci = o.name COLLATE utf8_unicode_ci
+            ORDER BY
+                o.name
+        )temp
+        WHERE temp.new_name IS NULL ;
+
