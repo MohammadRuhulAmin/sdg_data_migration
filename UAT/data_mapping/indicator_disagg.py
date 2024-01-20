@@ -44,7 +44,50 @@ def get_serial_no_from_exist_db():
     except Exception as E:
         print(str(E))
 
-def get_mapped_data(serial_no_list):
+def insert_disagg_info_ind_def_disagg(unique_defination_data):
+    try:
+        cursor_dest = mydb_connection_destinationdb.cursor()
+        for defination_data in unique_defination_data:
+            indicator_id = defination_data[0]
+            ind_id = indicator_id
+            disagg_id = defination_data[1]
+            disagg_name = defination_data[2]
+            # print(indicator_id,disagg_id,disagg_name)
+            # now getting ind_def_id
+            try:
+                query = """
+                SELECT id FROM uat_sdg_tracker_clone.ind_definitions
+                WHERE ind_id = %s;
+                """
+                cursor_dest.execute(query,(indicator_id,))
+                ind_def_id = cursor_dest.fetchall()[0][0]
+                find_same_row = """
+                SELECT *
+                FROM uat_sdg_tracker_clone.ind_def_disagg WHERE ind_id = %s AND 
+                ind_def_id = %s AND disagg_id = %s AND disagg_name = %s;
+                """
+                cursor_dest.execute(find_same_row,(ind_id,ind_def_id,disagg_id,disagg_name,))
+                row = cursor_dest.fetchone()
+                if row:
+                    continue
+                else:
+                    insert_ind_def_disagg = """
+                    INSERT INTO uat_sdg_tracker_clone.ind_def_disagg(ind_id,ind_def_id,disagg_id,disagg_name)
+                    VALUES(%s,%s,%s,%s);
+                    """
+                    cursor_dest.execute(insert_ind_def_disagg,(ind_id,ind_def_id,disagg_id,disagg_name,))
+                    mydb_connection_destinationdb.commit()
+                    print("Inserted in ind_def_disagg:  ",ind_id,ind_def_id,disagg_id,disagg_name)
+
+            except Exception as E:
+                continue
+
+
+    except Exception as E:
+        print(str(E))
+
+
+def operation_mapped_data(serial_no_list):
     try:
         cursor_source = mydb_connection_sourcedb.cursor()
         query = """
@@ -89,9 +132,8 @@ def get_mapped_data(serial_no_list):
                 nested_array.append([indicator_id,disaggregation_id,disagg_name])
 
         unique_defination_data = unique_nested_array(nested_array)
-        print(unique_defination_data)
-
-
+        # insert disagg_name,disagg_id and ind_def_id in uat.ind_def_disagg table. Ind_def_id = ind_definations.id where ind_id = indicator_id
+        insert_disagg_info_ind_def_disagg(unique_defination_data)
 
 
 
@@ -110,4 +152,4 @@ def get_mapped_data(serial_no_list):
 
 if __name__ == "__main__":
     serial_no_list = get_serial_no_from_exist_db()
-    get_mapped_data(serial_no_list)
+    operation_mapped_data(serial_no_list)
