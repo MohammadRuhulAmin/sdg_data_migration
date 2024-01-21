@@ -105,11 +105,56 @@ def operation_mapped_data(serial_no_list):
                         'indicator_id_list':temp_indicator_id_list if temp_indicator_id_list else None,
                         'ind_def_id_list':temp_ind_def_id_list if temp_ind_def_id_list else None
                     }
-                    print("--------------------------")
-                    print(row)
-                    print(temp_indicator_id_list, temp_ind_def_id_list)
-                    print(temp_json)
-                    print("--------------------------")
+                    # print("--------------------------")
+                    # print(row)
+                    # print(temp_indicator_id_list, temp_ind_def_id_list)
+                    # print(temp_json)
+                    # print("--------------------------")
+                    if disaggregation_id == 1:
+                        indicator_id_list = temp_json['indicator_id_list']
+                        ind_def_id_list = temp_json['ind_def_id_list']
+                        for index in range(0,len(indicator_id_list)):
+                            ind_id = indicator_id_list[index]
+                            ind_def_id = ind_def_id_list[index]
+                            source_id = temp_json['source_id']
+                            data_period = temp_json['data_period']
+                            data_value = temp_json['data_value']
+                            insert_indicator_dis_1 = """
+                            INSERT INTO indicator_data (ind_id,ind_def_id,source_id, data_period, data_value) VALUES ( %s,%s, %s, %s,%s);
+                            """
+                            cursor_dest.execute(insert_indicator_dis_1,(ind_id, ind_def_id, source_id, data_period, data_value,))
+                            mydb_connection_destinationdb.commit()
+                            print("data inserted in indicator_data when disaggregation_id = 1",ind_id,ind_def_id,source_id,data_period,data_value)
+                    else:
+                        indicator_id_list = temp_json['indicator_id_list']
+                        ind_def_id_list = temp_json['ind_def_id_list']
+                        for index in range(0,len(indicator_id_list)):
+                            ind_id = indicator_id_list[index]
+                            ind_def_id = ind_def_id_list[index]
+                            source_id = temp_json['source_id']
+                            data_period = temp_json['data_period']
+                            data_value = temp_json['data_value']
+                            disagg_name = temp_json['disagg_name']
+                            insert_indicator_dis_multiple = """
+                            INSERT INTO indicator_data(ind_id,ind_def_id,source_id,data_period) VALUES (%s,%s,%s,%s);
+                            """
+                            cursor_dest.execute(insert_indicator_dis_multiple,(ind_id,ind_def_id, source_id,data_period,))
+                            ind_data_id = cursor_dest.lastrowid
+                            disagg_name = disagg_name
+                            data_value = temp_json['data_value']
+                            query_get_disagg_id = """
+                            SELECT id,name FROM disaggregation_name 
+                            WHERE `name` like %s;
+                            """
+                            cursor_dest.execute(query_get_disagg_id, (f"%{disagg_name}%",))
+                            disagg_id = cursor_dest.fetchall()[0][0]
+                            insert_in_disagg_data = """
+                            INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
+                            VALUES(%s,%s,%s,%s)
+                            """
+                            cursor_dest.execute(insert_in_disagg_data, (ind_data_id, disagg_id, disagg_name, data_value))
+                            mydb_connection_destinationdb.commit()
+                            print("Data inserted in indicator_disagg_data ", ind_data_id, disagg_id, disagg_name,data_value)
 
                 except Exception as E:continue
 
