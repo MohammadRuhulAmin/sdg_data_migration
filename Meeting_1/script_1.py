@@ -34,20 +34,6 @@ def get_serial_no_from_exist_db():
     except Exception as E:
         print(str(E))
 
-def insert_data_destination_indicator_data(new_ind_def_id,new_source_id,time_name, value):
-    try:
-        cursor_destination = mydb_connection_destinationdb.cursor()
-        insert_query = """
-        INSERT INTO indicator_data (ind_def_id,source_id, data_period, data_value) VALUES (%s, %s, %s, %s);
-        """
-        insert_qury = (new_ind_def_id,new_source_id,time_name, value,)
-        print(new_ind_def_id,new_source_id,time_name, value)
-        cursor_destination.execute(insert_query, insert_qury)
-        mydb_connection_destinationdb.commit()
-        print("Updated on indicator_data", new_ind_def_id,new_source_id,time_name, value)
-
-    except Exception as e:
-        print(f"MySQL error: {e}")
 
 
 def operation_mapped_data(serial_no_list):
@@ -87,6 +73,7 @@ def operation_mapped_data(serial_no_list):
             sidc.sdg_disaggregation_id,
             sidc.value,tp.name,sdl.name;
         """
+
         for serial_no in serial_no_list:
             cursor_source.execute(query,(serial_no,))
             results = cursor_source.fetchall()
@@ -110,16 +97,43 @@ def operation_mapped_data(serial_no_list):
                     cursor_dest.execute(query_ind_def,(indicator_id,))
                     new_ind_def_id = cursor_dest.fetchall()[0][0]
                     if disaggregation_id == 1:
-                        insert_data_destination_indicator_data(new_ind_def_id,new_source_id,time_name, value)
+                        insert_indicator_dis_1 = """
+                        INSERT INTO indicator_data (ind_def_id,source_id, data_period, data_value) VALUES (%s, %s, %s, %s);
+                        """
+                        cursor_dest.execute(insert_indicator_dis_1,(new_ind_def_id,source_id,time_name,value,))
+                        mydb_connection_destinationdb.commit()
+                        print("data inserted in indicator_data when disaggregation_id = 1")
                     else:
-                        continue
-                        #insert_date_destination_indicator_disagg_data(serial_no, disagg_name, value)
+                        print(new_ind_def_id,source_id,time_name,value)
+                        insert_indicator_dis_multiple = """
+                        INSERT INTO indicator_data(ind_def_id,source_id,data_period) VALUES (%s,%s,%s);
+                        """
+                        cursor_dest.execute(insert_indicator_dis_multiple,(new_ind_def_id,source_id,time_name,))
+                        mydb_connection_destinationdb.commit()
+                        last_inserted_id = cursor_dest.lastrowid
+                        ind_data_id = last_inserted_id
+                        disagg_name = disagg_name
+                        data_value = value
+                        query_get_disagg_id = """
+                        SELECT id,name FROM disaggregation_name 
+                        WHERE `name` like %s;
+                        """
+                        cursor_dest.execute(query_get_disagg_id, (f"%{disagg_name}%",))
+                        disagg_id = cursor_dest.fetchall()[0][0]
+                        insert_in_disagg_data = """
+                         INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
+                         VALUES(%s,%s,%s,%s)
+                        """
+                        cursor_dest.execute(insert_in_disagg_data,(ind_data_id,disagg_id,disagg_name,data_value))
+                        mydb_connection_destinationdb.commit()
+                        print("Data inserted in indicator_disagg_data ",ind_data_id,disagg_id,disagg_name,data_value)
+
+
+
+
+
                 except Exception as E:
                     continue
-
-
-
-
     except Exception as E:
         print(str(E))
 
