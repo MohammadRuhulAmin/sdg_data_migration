@@ -15,28 +15,32 @@ mydb_connection_destinationdb = mysql.connector.connect(
     password="ruhulamin",
     database="uat_sdg_tracker_clone"
 )
-def insert_data_destination_indicator_data(serial_no,time_name,value):
+
+def insert_data_destination_indicator_data(serial_no, time_name, value):
     try:
         cursor_destination = mydb_connection_destinationdb.cursor()
-        #getting indicator_id using indicator_no from sdg_indicator_details
+        # Getting indicator_id using indicator_no from sdg_indicator_details
         query_get_serial_no = """
-        SELECT indicator_id,indicator_number from sdg_indicator_details 
+        SELECT indicator_id, indicator_number FROM sdg_indicator_details 
         WHERE indicator_number = %s;
         """
-        cursor_destination.execute(query_get_serial_no,(serial_no,))
+        cursor_destination.execute(query_get_serial_no, (serial_no,))
         indicator_info = cursor_destination.fetchall()
+        print(time_name,value)
         for info in indicator_info:
             indicator_id = info[0]
-            update_query = """
-            UPDATE indicator_data SET data_period = %s, data_value = %s
-            WHERE id = %s
+            insert_query = """
+            INSERT INTO indicator_data (ind_id, data_period, data_value) VALUES (%s, %s, %s);
             """
-            if_only_update = (time_name,value,indicator_id,)
-            cursor_destination.execute(update_query,(if_only_update))
+            insert_qury = (indicator_id, time_name, value)
+
+            cursor_destination.execute(insert_query, insert_qury)
             mydb_connection_destinationdb.commit()
-            print("updated on indicator_data", indicator_id,time_name,value)
-    except Exception as E:
-        print(str(E))
+            print("Updated on indicator_data", indicator_id, time_name, value)
+
+    except Exception as e:
+        print(f"MySQL error: {e}")
+
 
 
 def insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value):
@@ -65,7 +69,7 @@ def insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value):
             for disagg_delt in disagg_details:
                 disagg_id = disagg_delt[0] #disagg_id
                 disagg_name = disagg_delt[1] #disagg_name
-                ind_data_id = indicator_id #ind_data_id
+                ind_data_id = indicator_id #ind_data_id (indicator data er id porbe)
                 query_insert_indicator_disagg_data = """
                 INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
                 VALUES(%s,%s,%s,%s)
@@ -205,6 +209,7 @@ def operation_mapped_data(serial_no_list):
                 if disaggregation_id == 1:
                     insert_data_destination_indicator_data(serial_no,time_name,value)
                 else:
+                    continue
                     insert_date_destination_indicator_disagg_data(serial_no,disagg_name,value)
 
 
