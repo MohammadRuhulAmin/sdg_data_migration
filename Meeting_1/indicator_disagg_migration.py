@@ -98,17 +98,17 @@ def operation_mapped_data(serial_no_list):
                     new_ind_def_id = cursor_dest.fetchall()[0][0]
                     if disaggregation_id == 1:
                         insert_indicator_dis_1 = """
-                        INSERT INTO indicator_data (ind_def_id,source_id, data_period, data_value) VALUES (%s, %s, %s, %s);
+                        INSERT INTO indicator_data (ind_id,ind_def_id,source_id, data_period, data_value) VALUES ( %s,%s, %s, %s,%s);
                         """
-                        cursor_dest.execute(insert_indicator_dis_1,(new_ind_def_id,source_id,time_name,value,))
+                        cursor_dest.execute(insert_indicator_dis_1,(indicator_id,new_ind_def_id,source_id,time_name,value,))
                         mydb_connection_destinationdb.commit()
                         print("data inserted in indicator_data when disaggregation_id = 1")
                     else:
                         print(new_ind_def_id,source_id,time_name,value)
                         insert_indicator_dis_multiple = """
-                        INSERT INTO indicator_data(ind_def_id,source_id,data_period) VALUES (%s,%s,%s);
+                        INSERT INTO indicator_data(ind_id,ind_def_id,source_id,data_period) VALUES (%s,%s,%s,%s);
                         """
-                        cursor_dest.execute(insert_indicator_dis_multiple,(new_ind_def_id,source_id,time_name,))
+                        cursor_dest.execute(insert_indicator_dis_multiple,(indicator_id,new_ind_def_id,source_id,time_name,))
                         mydb_connection_destinationdb.commit()
                         last_inserted_id = cursor_dest.lastrowid
                         ind_data_id = last_inserted_id
@@ -127,11 +127,6 @@ def operation_mapped_data(serial_no_list):
                         cursor_dest.execute(insert_in_disagg_data,(ind_data_id,disagg_id,disagg_name,data_value))
                         mydb_connection_destinationdb.commit()
                         print("Data inserted in indicator_disagg_data ",ind_data_id,disagg_id,disagg_name,data_value)
-
-
-
-
-
                 except Exception as E:
                     continue
     except Exception as E:
