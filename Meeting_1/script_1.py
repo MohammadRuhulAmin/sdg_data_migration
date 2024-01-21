@@ -34,6 +34,22 @@ def get_serial_no_from_exist_db():
     except Exception as E:
         print(str(E))
 
+def insert_data_destination_indicator_data(new_ind_def_id,new_source_id,time_name, value):
+    try:
+        cursor_destination = mydb_connection_destinationdb.cursor()
+        insert_query = """
+        INSERT INTO indicator_data (ind_def_id,source_id, data_period, data_value) VALUES (%s, %s, %s, %s);
+        """
+        insert_qury = (new_ind_def_id,new_source_id,time_name, value,)
+        print(new_ind_def_id,new_source_id,time_name, value)
+        cursor_destination.execute(insert_query, insert_qury)
+        mydb_connection_destinationdb.commit()
+        print("Updated on indicator_data", new_ind_def_id,new_source_id,time_name, value)
+
+    except Exception as e:
+        print(f"MySQL error: {e}")
+
+
 def operation_mapped_data(serial_no_list):
     try:
         cursor_source = mydb_connection_sourcedb.cursor()
@@ -93,7 +109,11 @@ def operation_mapped_data(serial_no_list):
                     query_ind_def = """SELECT id FROM ind_definitions WHERE ind_id = %s"""
                     cursor_dest.execute(query_ind_def,(indicator_id,))
                     new_ind_def_id = cursor_dest.fetchall()[0][0]
-
+                    if disaggregation_id == 1:
+                        insert_data_destination_indicator_data(new_ind_def_id,new_source_id,time_name, value)
+                    else:
+                        continue
+                        #insert_date_destination_indicator_disagg_data(serial_no, disagg_name, value)
                 except Exception as E:
                     continue
 
@@ -104,6 +124,9 @@ def operation_mapped_data(serial_no_list):
         print(str(E))
 
 
+
+### NOTE: indicator_data er data_period need to be in varchar
+## all column will be null
 
 
 if __name__ == "__main__":
