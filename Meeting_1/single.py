@@ -16,7 +16,6 @@ mydb_connection_destinationdb = mysql.connector.connect(
     database="uat_sdg_tracker_clone"
 )
 
-# and sil.serial_no = "8.5.2"
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
@@ -24,6 +23,7 @@ def get_serial_no_from_exist_db():
         query = """
         select sil.serial_no from sdg_indicator_langs sil
         where sil.language_id = 1
+        and sil.serial_no = "8.5.2"
         group by sil.serial_no
         order by sil.serial_no;
         """
@@ -68,7 +68,6 @@ def operation_mapped_data(serial_no_list):
             rows = cursor_source.fetchall()
             for row in rows:
                 try:
-
                     serial_no = row[0]
                     disaggregation_id = row[1]
                     data_value = row[2]
@@ -106,11 +105,8 @@ def operation_mapped_data(serial_no_list):
                         'indicator_id_list':temp_indicator_id_list if temp_indicator_id_list else None,
                         'ind_def_id_list':temp_ind_def_id_list if temp_ind_def_id_list else None
                     }
-                    # print("--------------------------")
-                    # print(row)
-                    # print(temp_indicator_id_list, temp_ind_def_id_list)
-                    # print(temp_json)
-                    # print("--------------------------")
+                    print(row)
+                    print(temp_json)
                     if disaggregation_id == 1:
                         indicator_id_list = temp_json['indicator_id_list']
                         ind_def_id_list = temp_json['ind_def_id_list']
@@ -127,8 +123,6 @@ def operation_mapped_data(serial_no_list):
                             mydb_connection_destinationdb.commit()
                             print("data inserted in indicator_data when disaggregation_id = 1",ind_id,ind_def_id,source_id,data_period,data_value)
                     else:
-                        if temp_json['disaggregation_id'] != 1:
-                            print(temp_json)
                         indicator_id_list = temp_json['indicator_id_list']
                         ind_def_id_list = temp_json['ind_def_id_list']
                         for index in range(0,len(indicator_id_list)):
@@ -160,6 +154,9 @@ def operation_mapped_data(serial_no_list):
                             print("Data inserted in indicator_disagg_data ", ind_data_id, disagg_id, disagg_name,data_value)
 
                 except Exception as E:continue
+
+
+
     except Exception as E:
         print(str(E))
 
