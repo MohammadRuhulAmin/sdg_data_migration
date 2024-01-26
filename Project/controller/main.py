@@ -43,7 +43,7 @@ def operation_mapped_data(serial_no_list):
         cursor_dest = mydb_connection_destinationdb.cursor()
         query = """
        SELECT tmp.*,tmp2.type_name
-    -- tmp2.disaggregation_name,
+        -- tmp2.disaggregation_name,
         FROM (SELECT sil.serial_no,
         sidc.sdg_disaggregation_id,
         sidc.value,stp.name data_period,

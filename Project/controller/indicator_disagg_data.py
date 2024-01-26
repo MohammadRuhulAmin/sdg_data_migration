@@ -19,7 +19,7 @@ mydb_connection_destinationdb = mysql.connector.connect(
 )
 
 def indicator_disagg_data(temp_json):
-    print(temp_json['disagg_name'],temp_json['type_name'])
+    print(temp_json['disagg_name'],"<--->",temp_json['type_name'])
     cursor_dest = mydb_connection_destinationdb.cursor()
     try:
         indicator_id_list = temp_json['indicator_id_list']
