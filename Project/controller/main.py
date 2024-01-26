@@ -25,7 +25,7 @@ def get_serial_no_from_exist_db():
         query = """
         select sil.serial_no from sdg_indicator_langs sil
         where sil.language_id = 1
-        and sil.serial_no = "1.3.1"
+        -- and sil.serial_no = "1.3.1"
         group by sil.serial_no
         order by sil.serial_no;
         """
@@ -36,8 +36,6 @@ def get_serial_no_from_exist_db():
         return serial_no_list
     except Exception as E:
         print(str(E))
-
-
 
 def operation_mapped_data(serial_no_list):
     try:
@@ -63,6 +61,7 @@ def operation_mapped_data(serial_no_list):
         FROM sdg_disaggregation_langs WHERE parent_id > 0)child
         ON parent.disaggregation_id = child.parent_id)tmp2 ON tmp.sdg_disaggregation_id=tmp2.disaggregation_id;
         """
+
         for serial_no in serial_no_list:
             cursor_source.execute(query,(serial_no,))
             rows = cursor_source.fetchall()
