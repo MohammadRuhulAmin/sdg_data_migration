@@ -15,7 +15,9 @@ mydb_connection_destinationdb = mysql.connector.connect(
     database="uat_sdg_tracker_clone"
 )
 
-
+ind_data_values = {
+    "ind_data_id" :None
+}
 def indicator_data(temp_json):
     cursor_dest = mydb_connection_destinationdb.cursor()
     try:
@@ -32,6 +34,7 @@ def indicator_data(temp_json):
             """
             cursor_dest.execute(insert_indicator_dis_1, (ind_id, ind_def_id, source_id, data_period, data_value,))
             mydb_connection_destinationdb.commit()
+            ind_data_values['ind_data_id'] = cursor_dest.lastrowid
             #print("data inserted in indicator_data when disaggregation_id = 1", ind_id, ind_def_id, source_id,
             #data_period, data_value)
     except Exception as E:

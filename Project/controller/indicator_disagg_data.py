@@ -1,5 +1,5 @@
 import mysql.connector
-
+from indicator_data import ind_data_values
 
 mydb_connection_sourcedb = mysql.connector.connect(
     host="localhost",
@@ -19,7 +19,6 @@ mydb_connection_destinationdb = mysql.connector.connect(
 )
 
 def indicator_disagg_data(temp_json):
-    print(temp_json['disagg_name'],"<--->",temp_json['type_name'])
     cursor_dest = mydb_connection_destinationdb.cursor()
     try:
         indicator_id_list = temp_json['indicator_id_list']
@@ -32,11 +31,12 @@ def indicator_disagg_data(temp_json):
                 data_period = temp_json['data_period']
                 data_value = temp_json['data_value']
                 disagg_name = temp_json['disagg_name']
-                insert_indicator_dis_multiple = """
-                INSERT INTO indicator_data(ind_id,ind_def_id,source_id,data_period) VALUES (%s,%s,%s,%s);
-                """
-                cursor_dest.execute(insert_indicator_dis_multiple, (ind_id, ind_def_id, source_id, data_period,))
-                ind_data_id = cursor_dest.lastrowid
+                # insert_indicator_dis_multiple = """
+                # INSERT INTO indicator_data(ind_id,ind_def_id,source_id,data_period) VALUES (%s,%s,%s,%s);
+                # """
+                # cursor_dest.execute(insert_indicator_dis_multiple, (ind_id, ind_def_id, source_id, data_period,))
+                # ind_data_id = cursor_dest.lastrowid
+                ind_data_id = ind_data_values['ind_data_id']
                 disagg_name = disagg_name
                 data_value = temp_json['data_value']
                 disagg_id = None
