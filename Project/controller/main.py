@@ -25,7 +25,7 @@ def get_serial_no_from_exist_db():
         query = """
         select sil.serial_no from sdg_indicator_langs sil
         where sil.language_id = 1
-        and sil.serial_no = "2.1.2"
+        and sil.serial_no = "1.5.1"
         group by sil.serial_no
         order by sil.serial_no;
         """
@@ -42,12 +42,9 @@ def operation_mapped_data(serial_no_list):
         cursor_source = mydb_connection_sourcedb.cursor()
         cursor_dest = mydb_connection_destinationdb.cursor()
         query = """
-       SELECT tmp.*,tmp2.type_name
-        -- tmp2.disaggregation_name,
-        FROM (SELECT sil.serial_no,
-        sidc.sdg_disaggregation_id,
-        sidc.value,stp.name data_period,
-        sdl.name,sid.source_id
+        SELECT tmp.serial_no,tmp.sdg_disaggregation_id,tmp.value,tmp.data_period,tmp.name,tmp.source_id,
+        tmp2.type_name,tmp.status,tmp.publish
+        FROM (SELECT sil.serial_no,sidc.sdg_disaggregation_id,sidc.value,stp.name data_period,sdl.name,sid.source_id,sidc.status,sidc.publish
         FROM sdg_indicator_langs sil
         LEFT JOIN sdg_indicator_data sid ON sid.indicator_id = sil.indicator_id
         LEFT JOIN sdg_indicator_data_children sidc ON sidc.indicator_data_id = sid.id
@@ -74,6 +71,10 @@ def operation_mapped_data(serial_no_list):
                     disagg_name = row[4]
                     source_id = row[5]
                     type_name = row[6]
+                    status = row[7]
+                    publish = row[8]
+                    if status == 5 and publish == 5:status = 5
+                    else:status = 1
                     get_indicator_id = """
                     SELECT sid.id FROM sdg_indicator_details sid 
                     LEFT JOIN sdg_indicators si ON si.id = sid.indicator_id
@@ -108,7 +109,8 @@ def operation_mapped_data(serial_no_list):
                         'source_id':new_source_id if new_source_id else None,
                         'indicator_id_list':temp_indicator_id_list if temp_indicator_id_list else None,
                         'ind_def_id_list':temp_ind_def_id_list if temp_ind_def_id_list else None,
-                        'type_name':type_name if type_name else None
+                        'type_name':type_name if type_name else None,
+                        'status':status
                     }
                     if disaggregation_id == 1:
                         id.indicator_data(temp_json)

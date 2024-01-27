@@ -29,10 +29,11 @@ def indicator_data(temp_json):
             source_id = temp_json['source_id']
             data_period = temp_json['data_period']
             data_value = temp_json['data_value']
+            status = temp_json['status']
             insert_indicator_dis_1 = """
-            INSERT INTO indicator_data (ind_id,ind_def_id,source_id, data_period, data_value) VALUES ( %s,%s, %s, %s,%s);
+            INSERT INTO indicator_data (ind_id,ind_def_id,source_id, data_period, data_value,status) VALUES ( %s,%s, %s, %s,%s,%s);
             """
-            cursor_dest.execute(insert_indicator_dis_1, (ind_id, ind_def_id, source_id, data_period, data_value,))
+            cursor_dest.execute(insert_indicator_dis_1, (ind_id, ind_def_id, source_id, data_period, data_value,status,))
             mydb_connection_destinationdb.commit()
             ind_data_values['ind_data_id'] = cursor_dest.lastrowid
             #print("data inserted in indicator_data when disaggregation_id = 1", ind_id, ind_def_id, source_id,
