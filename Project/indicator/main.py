@@ -39,13 +39,13 @@ def get_serial_no_from_exist_db():
 
 def operation_mapped_data(serial_no_list):
     try:
-
         cursor_source = mydb_connection_sourcedb.cursor()
         cursor_dest = mydb_connection_destinationdb.cursor()
         query = """
         SELECT tmp.serial_no,tmp.sdg_disaggregation_id,tmp.value,tmp.data_period,tmp.name,tmp.source_id,
         tmp2.type_name,tmp.status,tmp.publish
-        FROM (SELECT sil.serial_no,sidc.sdg_disaggregation_id,sidc.value,stp.name data_period,sdl.name,sid.source_id,sidc.status,sidc.publish
+        FROM (SELECT sil.serial_no,sidc.sdg_disaggregation_id,sidc.value,stp.name data_period,sdl.name,sid.source_id,
+        sidc.status,sidc.publish
         FROM sdg_indicator_langs sil
         LEFT JOIN sdg_indicator_data sid ON sid.indicator_id = sil.indicator_id
         LEFT JOIN sdg_indicator_data_children sidc ON sidc.indicator_data_id = sid.id
