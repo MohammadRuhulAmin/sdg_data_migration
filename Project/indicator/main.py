@@ -4,7 +4,7 @@ import query.mapped_query as qmap
 import query.get_serial_list as sl
 import query.get_indicator_id as indi_id
 import Project.connection as mysql_connection
-
+import query.other_queries as oq
 
 status_mapping = {(3, 4): 1, (4, 4): 2, (5, 4): 3, (5, 5): 4}
 def get_serial_no_from_exist_db():
@@ -29,14 +29,11 @@ def operation_mapped_data(serial_no_list):
             for row in rows:
                 try:
                     serial_no, disaggregation_id, data_value, data_period, disagg_name, source_id, type_name, status, publish = row[:9]
-                    if (status, publish) in status_mapping:
-                        status = status_mapping[(status, publish)]
-
+                    if (status, publish) in status_mapping:status = status_mapping[(status, publish)]
                     cursor_dest.execute(indi_id.get_indicator_id, (serial_no,))
                     indicator_id_list = cursor_dest.fetchall()
                     # getting source_id from ind_sources table
-                    query_source = """SELECT * FROM mapped_sources WHERE old_source_id =%s """
-                    cursor_dest.execute(query_source, (source_id,))
+                    cursor_dest.execute(oq.query_source, (source_id,))
                     new_source_id = cursor_dest.fetchall()[0][3]
                     # getting ind_def_id
                     # getting ind_def_id from ind_definitions table
@@ -45,8 +42,7 @@ def operation_mapped_data(serial_no_list):
                     temp_indicator_id_list = []
                     for indicator_id in indicator_id_list:
                         indicator_id = indicator_id[0]
-                        query_ind_def = """SELECT id FROM ind_definitions WHERE ind_id = %s LIMIT 1"""
-                        cursor_dest.execute(query_ind_def,(indicator_id,))
+                        cursor_dest.execute(oq.query_ind_def,(indicator_id,))
                         temp_indicator_id_list.append(indicator_id)
                         ind_def_id = cursor_dest.fetchone()
                         temp_ind_def_id_list.append(ind_def_id[0] if ind_def_id else None)
