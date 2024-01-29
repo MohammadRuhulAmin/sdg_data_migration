@@ -6,6 +6,7 @@ mydb_connection_sourcedb = mysql.connector.connect(
     password="ruhulamin",
     database="sdg_v1_v2_live"
 )
+
 mydb_connection_destinationdb = mysql.connector.connect(
     host="localhost",
     port=3306,

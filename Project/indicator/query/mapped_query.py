@@ -16,4 +16,4 @@ query = """
         LEFT JOIN (SELECT id,disaggregation_id,language_id,parent_id,NAME
         FROM sdg_disaggregation_langs WHERE parent_id > 0)child
         ON parent.disaggregation_id = child.parent_id)tmp2 ON tmp.sdg_disaggregation_id=tmp2.disaggregation_id;
-        """
+"""

@@ -1,10 +1,10 @@
 import indicator_data as id
 import indicator_disagg_data as idd
-import query.mapped_query as qmap
-import query.get_serial_list as sl
-import query.get_indicator_id as indi_id
+import Project.indicator.query.mapped_query as qmap
+import Project.indicator.query.get_serial_list as sl
+import Project.indicator.query.get_indicator_id as indi_id
 import Project.connection as mysql_connection
-import query.other_queries as oq
+import Project.indicator.query.other_queries as oq
 
 status_mapping = {(3, 4): 1, (4, 4): 2, (5, 4): 3, (5, 5): 4}
 def get_serial_no_from_exist_db():

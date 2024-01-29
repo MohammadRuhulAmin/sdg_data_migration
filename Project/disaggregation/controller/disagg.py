@@ -1,4 +1,4 @@
-import mysql.connector
+
 import Project.disaggregation.query.get_serial_list as sl
 import Project.disaggregation.query.mapped_query as mq
 import Project.disaggregation.query.other_queries as oq
