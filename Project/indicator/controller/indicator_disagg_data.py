@@ -33,6 +33,7 @@ def indicator_disagg_data(temp_json):
                     disagg_name = row[0][1]
                 else:
                     disagg_name = None
+
                 insert_in_disagg_data = """
                 INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
                 VALUES(%s,%s,%s,%s)

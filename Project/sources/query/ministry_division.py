@@ -1,4 +1,6 @@
-query_get_ministry_division_info = """SELECT id,ministry_id,name FROM ministry_divisions;"""
+query_get_ministry_division_info = """
+SELECT id,ministry_id,name FROM ministry_divisions;
+"""
 
 query_getting_ids = """
 SELECT GROUP_CONCAT(id) AS id_list FROM ind_sources
