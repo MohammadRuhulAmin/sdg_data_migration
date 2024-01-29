@@ -5,6 +5,8 @@ import query.get_serial_list as sl
 import query.get_indicator_id as indi_id
 import Project.connection as mysql_connection
 
+
+status_mapping = {(3, 4): 1, (4, 4): 2, (5, 4): 3, (5, 5): 4}
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
@@ -35,8 +37,9 @@ def operation_mapped_data(serial_no_list):
                     type_name = row[6]
                     status = row[7]
                     publish = row[8]
-                    if status == 5 and publish == 5:status = 5
-                    else:status = 1
+
+                    if (status, publish) in status_mapping:
+                        status = status_mapping[(status, publish)]
 
                     cursor_dest.execute(indi_id.get_indicator_id, (serial_no,))
                     indicator_id_list = cursor_dest.fetchall()
@@ -70,10 +73,8 @@ def operation_mapped_data(serial_no_list):
                         'status':status
                     }
 
-                    print("Indicator: ",serial_no)
                     if disaggregation_id == 1:id.indicator_data(temp_json)
                     else:idd.indicator_disagg_data(temp_json)
-
 
                 except Exception as E:continue
     except Exception as E:
