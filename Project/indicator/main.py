@@ -1,32 +1,14 @@
-import mysql.connector
 import indicator_data as id
 import indicator_disagg_data as idd
 import query.mapped_query as qmap
 import query.get_serial_list as sl
 import query.get_indicator_id as indi_id
-mydb_connection_sourcedb = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="ruhulamin",
-    database="sdg_v1_v2_live"
-)
+import Project.connection as mysql_connection
 
-
-mydb_connection_destinationdb = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="ruhulamin",
-    database="uat_sdg_tracker_clone"
-)
-
-# and sil.serial_no = "8.5.2"
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
-        cursor_exist = mydb_connection_sourcedb.cursor()
-
+        cursor_exist = mysql_connection.mydb_connection_sourcedb.cursor()
         cursor_exist.execute(sl.query)
         serial_rows = cursor_exist.fetchall()
         for serial_no in serial_rows:
@@ -37,11 +19,8 @@ def get_serial_no_from_exist_db():
 
 def operation_mapped_data(serial_no_list):
     try:
-        cursor_source = mydb_connection_sourcedb.cursor()
-        cursor_dest = mydb_connection_destinationdb.cursor()
-
-
-
+        cursor_source = mysql_connection.mydb_connection_sourcedb.cursor()
+        cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
         for serial_no in serial_no_list:
             cursor_source.execute(qmap.query,(serial_no,))
             rows = cursor_source.fetchall()
