@@ -27,6 +27,7 @@ def get_all_user_role():
         ur.role_name COLLATE utf8_unicode_ci = sur.name COLLATE utf8_unicode_ci
         WHERE ur.role_name IS NULL;
         """
+
         cursor_exist.execute(query)
         rows = cursor_exist.fetchall()
         for row in rows:
@@ -34,7 +35,6 @@ def get_all_user_role():
             cursor_dest.execute(query_insert,(row[0],))
             mydb_connection_destinationdb.commit()
             print(row[0], " Has been inserted")
-
     except Exception as E:
         print(str(E))
 

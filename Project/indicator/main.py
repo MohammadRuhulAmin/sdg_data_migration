@@ -1,6 +1,9 @@
 import mysql.connector
 import indicator_data as id
 import indicator_disagg_data as idd
+import query.mapped_query as qmap
+import query.get_serial_list as sl
+import query.get_indicator_id as indi_id
 mydb_connection_sourcedb = mysql.connector.connect(
     host="localhost",
     port=3306,
@@ -8,6 +11,7 @@ mydb_connection_sourcedb = mysql.connector.connect(
     password="ruhulamin",
     database="sdg_v1_v2_live"
 )
+
 
 mydb_connection_destinationdb = mysql.connector.connect(
     host="localhost",
@@ -22,14 +26,8 @@ def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
         cursor_exist = mydb_connection_sourcedb.cursor()
-        query = """
-        select sil.serial_no from sdg_indicator_langs sil
-        where sil.language_id = 1
-        -- and sil.serial_no = "1.5.1"
-        group by sil.serial_no
-        order by sil.serial_no;
-        """
-        cursor_exist.execute(query)
+
+        cursor_exist.execute(sl.query)
         serial_rows = cursor_exist.fetchall()
         for serial_no in serial_rows:
             serial_no_list.append(serial_no[0])
@@ -41,28 +39,11 @@ def operation_mapped_data(serial_no_list):
     try:
         cursor_source = mydb_connection_sourcedb.cursor()
         cursor_dest = mydb_connection_destinationdb.cursor()
-        query = """
-        SELECT tmp.serial_no,tmp.sdg_disaggregation_id,tmp.value,tmp.data_period,tmp.name,tmp.source_id,
-        tmp2.type_name,tmp.status,tmp.publish
-        FROM (SELECT sil.serial_no,sidc.sdg_disaggregation_id,sidc.value,stp.name data_period,sdl.name,sid.source_id,
-        sidc.status,sidc.publish
-        FROM sdg_indicator_langs sil
-        LEFT JOIN sdg_indicator_data sid ON sid.indicator_id = sil.indicator_id
-        LEFT JOIN sdg_indicator_data_children sidc ON sidc.indicator_data_id = sid.id
-        LEFT JOIN sdg_time_periods stp ON stp.id = sid.time_period_id
-        LEFT JOIN sdg_disaggregation_langs sdl ON sdl.disaggregation_id = sidc.sdg_disaggregation_id
-        WHERE sil.serial_no = %s AND sil.language_id = 1)tmp
-        LEFT JOIN(SELECT child.disaggregation_id disaggregation_id,child.language_id,child.parent_id,
-        child.name disaggregation_name,parent.name type_name,parent.disaggregation_id type_id FROM (SELECT id,disaggregation_id,language_id,parent_id,NAME
-        FROM sdg_disaggregation_langs WHERE parent_id = 0)parent
-        LEFT JOIN (SELECT id,disaggregation_id,language_id,parent_id,NAME
-        FROM sdg_disaggregation_langs WHERE parent_id > 0)child
-        ON parent.disaggregation_id = child.parent_id)tmp2 ON tmp.sdg_disaggregation_id=tmp2.disaggregation_id;
-        """
+
 
 
         for serial_no in serial_no_list:
-            cursor_source.execute(query,(serial_no,))
+            cursor_source.execute(qmap.query,(serial_no,))
             rows = cursor_source.fetchall()
             for row in rows:
                 try:
@@ -77,13 +58,8 @@ def operation_mapped_data(serial_no_list):
                     publish = row[8]
                     if status == 5 and publish == 5:status = 5
                     else:status = 1
-                    get_indicator_id = """
-                    SELECT sid.id FROM sdg_indicator_details sid 
-                    LEFT JOIN sdg_indicators si ON si.id = sid.indicator_id
-                    WHERE sid.indicator_number  = %s AND sid.language_id = 1
-                    AND si.is_npt_thirty_nine = 0 AND si.is_plus_one = 0;
-                    """
-                    cursor_dest.execute(get_indicator_id, (serial_no,))
+
+                    cursor_dest.execute(indi_id.get_indicator_id, (serial_no,))
                     indicator_id_list = cursor_dest.fetchall()
                     # getting source_id from ind_sources table
                     query_source = """SELECT * FROM mapped_sources WHERE old_source_id =%s """
