@@ -4,7 +4,6 @@ import Project.disaggregation.query.mapped_query as mq
 import Project.disaggregation.query.other_queries as oq
 import Project.connection as mysql_connection
 
-
 def get_serial_no_from_exist_db():
     try:
         serial_no_list = []
