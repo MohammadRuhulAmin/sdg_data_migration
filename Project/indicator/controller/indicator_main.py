@@ -28,7 +28,7 @@ def operation_mapped_data(serial_no_list):
             rows = cursor_source.fetchall()
             for row in rows:
                 try:
-                    serial_no, disaggregation_id, data_value, data_period, disagg_name, source_id, type_name, status, publish = row[:9]
+                    serial_no, disaggregation_id, data_value, data_period, disagg_name, source_id, type_name, status, publish,created_at,updated_at = row[:11]
                     if (status, publish) in status_mapping:status = status_mapping[(status, publish)]
                     cursor_dest.execute(indi_id.get_indicator_id, (serial_no,))
                     indicator_id_list = cursor_dest.fetchall()
@@ -57,7 +57,9 @@ def operation_mapped_data(serial_no_list):
                         'indicator_id_list':temp_indicator_id_list if temp_indicator_id_list else None,
                         'ind_def_id_list':temp_ind_def_id_list if temp_ind_def_id_list else None,
                         'type_name':type_name if type_name else None,
-                        'status':status
+                        'status':status,
+                        'created_at':created_at,
+                        'updated_at':updated_at
                     }
                     print(temp_json)
                     if disaggregation_id == 1:id.indicator_data(temp_json)

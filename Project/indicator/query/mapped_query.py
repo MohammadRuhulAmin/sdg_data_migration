@@ -1,8 +1,8 @@
 query = """
         SELECT tmp.serial_no,tmp.sdg_disaggregation_id,tmp.value,tmp.data_period,tmp.name,tmp.source_id,
-        tmp2.type_name,tmp.status,tmp.publish,tmp.is_location
+        tmp2.type_name,tmp.status,tmp.publish,tmp.created,tmp.modified
         FROM (SELECT sil.serial_no,sidc.sdg_disaggregation_id,sidc.value,stp.name data_period,sdl.name,sid.source_id,sidc.is_location,
-        sidc.status,sidc.publish
+        sidc.status,sidc.publish,sid.created,sid.modified
         FROM sdg_indicator_langs sil
         LEFT JOIN sdg_indicator_data sid ON sid.indicator_id = sil.indicator_id
         LEFT JOIN sdg_indicator_data_children sidc ON sidc.indicator_data_id = sid.id AND sidc.is_location = 0

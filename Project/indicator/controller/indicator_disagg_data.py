@@ -1,5 +1,7 @@
 from indicator_data import ind_data_values
 import Project.connection as mysql_connection
+import Project.indicator.query.get_indicator_id as indidc
+import Project.indicator.query.other_queries as oq
 
 def indicator_disagg_data(temp_json):
     cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
@@ -17,30 +19,17 @@ def indicator_disagg_data(temp_json):
                 ind_data_id = ind_data_values['ind_data_id']
                 disagg_name = disagg_name
                 data_value = temp_json['data_value']
+                created_at = temp_json['created_at']
+                updated_at = temp_json['updated_at']
                 disagg_id = None
-                query_get_disagg_id = """
-                SELECT id,name FROM disaggregation_name
-                WHERE `name` like %s;
-                """
-
-                cursor_dest.execute(query_get_disagg_id, (f"%{disagg_name}%",))
+                cursor_dest.execute(oq.query_get_disagg_id, (f"%{disagg_name}%",))
                 row = cursor_dest.fetchall()
-                if row and row[0] and row[0][0]:
-                    disagg_id = row[0][0]
-                else:
-                    disagg_id = None
-                if row and row[0] and row[0][1]:
-                    disagg_name = row[0][1]
-                else:
-                    disagg_name = None
-
-                insert_in_disagg_data = """
-                INSERT INTO indicator_disagg_data(ind_data_id,disagg_id,disagg_name,data_value)
-                VALUES(%s,%s,%s,%s)
-                """
-                cursor_dest.execute(insert_in_disagg_data, (ind_data_id, disagg_id, disagg_name, data_value))
+                if row and row[0] and row[0][0]:disagg_id = row[0][0]
+                else:disagg_id = None
+                if row and row[0] and row[0][1]:disagg_name = row[0][1]
+                else:disagg_name = None
+                cursor_dest.execute(indidc.insert_in_disagg_data, (ind_data_id, disagg_id, disagg_name, data_value,created_at,updated_at,))
                 mysql_connection.mydb_connection_destinationdb.commit()
-                #print("Data inserted in indicator_disagg_data ", ind_data_id, disagg_id, disagg_name, data_value)
             except Exception as E:
                 print(str(E))
     except Exception as E:
