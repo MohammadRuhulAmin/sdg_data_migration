@@ -1,25 +1,10 @@
-import mysql.connector
-mydb_connection_sourcedb = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="ruhulamin",
-    database="sdg_v1_v2_live"
-)
-
-mydb_connection_destinationdb = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="ruhulamin",
-    database="uat_sdg_tracker_clone"
-)
+import Project.connection as mysql_connection
 
 ind_data_values = {
     "ind_data_id" :None
 }
 def indicator_data(temp_json):
-    cursor_dest = mydb_connection_destinationdb.cursor()
+    cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
     try:
         indicator_id_list = temp_json['indicator_id_list']
         ind_def_id_list = temp_json['ind_def_id_list']
@@ -34,7 +19,7 @@ def indicator_data(temp_json):
             INSERT INTO indicator_data (ind_id,ind_def_id,source_id, data_period, data_value,status) VALUES ( %s,%s, %s, %s,%s,%s);
             """
             cursor_dest.execute(insert_indicator_dis_1, (ind_id, ind_def_id, source_id, data_period, data_value,status,))
-            mydb_connection_destinationdb.commit()
+            mysql_connection.mydb_connection_destinationdb.commit()
             ind_data_values['ind_data_id'] = cursor_dest.lastrowid
             #print("data inserted in indicator_data when disaggregation_id = 1", ind_id, ind_def_id, source_id,
             #data_period, data_value)
