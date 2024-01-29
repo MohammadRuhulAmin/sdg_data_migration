@@ -28,16 +28,7 @@ def operation_mapped_data(serial_no_list):
             rows = cursor_source.fetchall()
             for row in rows:
                 try:
-                    serial_no = row[0]
-                    disaggregation_id = row[1]
-                    data_value = row[2]
-                    data_period = row[3]
-                    disagg_name = row[4]
-                    source_id = row[5]
-                    type_name = row[6]
-                    status = row[7]
-                    publish = row[8]
-
+                    serial_no, disaggregation_id, data_value, data_period, disagg_name, source_id, type_name, status, publish = row[:9]
                     if (status, publish) in status_mapping:
                         status = status_mapping[(status, publish)]
 
@@ -72,17 +63,13 @@ def operation_mapped_data(serial_no_list):
                         'type_name':type_name if type_name else None,
                         'status':status
                     }
-
+                    print(temp_json)
                     if disaggregation_id == 1:id.indicator_data(temp_json)
                     else:idd.indicator_disagg_data(temp_json)
 
                 except Exception as E:continue
     except Exception as E:
         print(str(E))
-
-### NOTE: indicator_data er data_period need to be in varchar
-## all column will be null
-
 
 if __name__ == "__main__":
     serial_no_list = get_serial_no_from_exist_db()
