@@ -17,7 +17,5 @@ def get_indicator():
     except Exception as E:
         print(str(E))
 
-
-
 if __name__ == "__main__":
     get_indicator()
