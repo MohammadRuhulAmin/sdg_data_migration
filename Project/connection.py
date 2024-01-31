@@ -14,3 +14,10 @@ mydb_connection_destinationdb = mysql.connector.connect(
     password="ruhulamin",
     database="uat_sdg_tracker_clone"
 )
+
+mydb_connection = mysql.connector.connect(
+    host="localhost",
+    port=3306,
+    user="root",
+    password="ruhulamin"
+)
