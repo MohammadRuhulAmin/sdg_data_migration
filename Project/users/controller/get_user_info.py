@@ -24,8 +24,16 @@ def get_necessary_information_for_users_table(username, user_category, user_type
             "user_email":email,
             "user_mobile":contact_no
         }
-        print(temp_json)
-        #check username already exist:
-
+        #check username already exist or not:
+        cursor_dest.execute(uiq.is_user_exist,(temp_json['username'],))
+        row = cursor_dest.fetchone()
+        if row:print(temp_json['username'], " This user already Exist")
+        else:
+            if temp_json['username'] is not None:
+                temp_tuple = (temp_json['username'],temp_json['user_type'],temp_json['user_role_id'],temp_json['additional_role_ids'],
+                              temp_json['name_eng'],temp_json['user_email'],temp_json['user_mobile'],)
+                #check username already exist:
+                cursor_dest.execute(uiq.insert_users,(temp_tuple))
+                mysql_connection.mydb_connection_destinationdb.commit()
     except Exception as E:
         print(str(E))
