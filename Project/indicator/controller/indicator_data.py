@@ -17,7 +17,6 @@ def indicator_data(temp_json):
             status = temp_json['status']
             created_at = temp_json['created_at']
             updated_at = temp_json['updated_at']
-
             cursor_dest.execute(indid.insert_indicator_dis_1, (ind_id, ind_def_id, source_id, data_period, data_value,status,created_at,updated_at,))
             mysql_connection.mydb_connection_destinationdb.commit()
             ind_data_values['ind_data_id'] = cursor_dest.lastrowid
