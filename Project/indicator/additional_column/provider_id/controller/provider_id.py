@@ -15,7 +15,7 @@ def get_indicator_number_list_and_time_period__listfrom_uat():
                 temp_data = cursor.fetchall()
                 for temp in temp_data:
                     data_period = temp[3]
-                    provider_id = temp[5]
+                    provider_id = temp[5] if temp[5] else 0
                     indicator_id = temp[7]
                     cursor_uat.execute(tpq.update_provider_id,(provider_id,indicator_id,data_period,))
                     mysql_connection.mydb_connection_destinationdb.commit()
@@ -25,7 +25,6 @@ def get_indicator_number_list_and_time_period__listfrom_uat():
                 continue
     except Exception as E:
         print(str(E))
-
 
 
 if __name__ == "__main__":
