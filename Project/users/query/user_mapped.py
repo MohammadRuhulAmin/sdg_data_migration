@@ -15,7 +15,7 @@ spl.username,spl.name,spl.email,spl.contact_no FROM sdg_provider_logs spl
 indicator_list_query = """
         select sil.serial_no from sdg_indicator_langs sil
         where sil.language_id = 1
-        -- and sil.serial_no = "1.3.1"
+        -- and sil.serial_no = "15.6.1"
         group by sil.serial_no
         order by sil.serial_no;
 """

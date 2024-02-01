@@ -24,3 +24,4 @@ def indicator_data(temp_json):
             #data_period, data_value)
     except Exception as E:
         print(str(E))
+
