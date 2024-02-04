@@ -15,7 +15,9 @@ ON temp1.disagg_name = temp2.name;
 
 indicator_number_list = """
 SELECT DISTINCT indicator_number FROM sdg_indicator_details 
-WHERE indicator_number = "1.1.1" and language_id = 1 and indicator_number <> "";
+WHERE 
+#indicator_number = "1.1.1" and 
+language_id = 1 and indicator_number <> "";
 """
 
 

@@ -1,7 +1,6 @@
 import Project.connection as mysql_connection
 import Project.ind_def_disagg.query.mapping_query as mq
 
-
 def get_indicator_number_from_uat():
     try:
         cursor_uat = mysql_connection.mydb_connection_destinationdb.cursor()

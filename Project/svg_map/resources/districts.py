@@ -62,7 +62,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "jhalokatiDistrict",
+         "region_id": "jhalakathiDistrict",
          "region_name": "JHALOKATI",
          "total": 12.8
       },
@@ -82,7 +82,7 @@ mapped_district = {
    "chittagongDivision": [
       {
          "parent_region_id": "bangladesh",
-         "region_id": "bandarbanDistrict",
+         "region_id": "bnadarbanDistrict",
          "region_name": "BANDARBAN",
          "total": 16.1
       },
@@ -124,7 +124,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "khagrachhariDistrict",
+         "region_id": "khagrachariDistrict",
          "region_name": "KHAGRACHHARI",
          "total": 13.1
       },
@@ -174,7 +174,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "kishoregonjDistrict",
+         "region_id": "kishoreganjDistrict",
          "region_name": "KISHOREGONJ",
          "total": 12.7
       },
@@ -304,7 +304,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "netrakonaDistrict",
+         "region_id": "netrokonaDistrict",
          "region_name": "NETRAKONA",
          "total": 17.6
       },
@@ -342,7 +342,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "chapainababganjDistrict",
+         "region_id": "nawabganjDistrict",
          "region_name": "CHAPAI NABABGANJ",
          "total": 13.2
       },
@@ -424,7 +424,7 @@ mapped_district = {
       },
       {
          "parent_region_id": "bangladesh",
-         "region_id": "maulvibazarDistrict",
+         "region_id": "moulvibazarDistrict",
          "region_name": "MAULVIBAZAR",
          "total": 14.2
       },
