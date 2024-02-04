@@ -8,12 +8,9 @@ def get_all_user_role():
         rows = cursor_exist.fetchall()
         for row in rows:
             print(row)
-            cursor_dest.execute(urq.is_role_exist,(row[0],))
-            if row:print(row[0], " already exist in user_role table")
-            else:
-                cursor_dest.execute(urq.query_insert,(row[0],))
-                mysql_connection.mydb_connection_destinationdb.commit()
-                print(row[0], " Has been inserted")
+            cursor_dest.execute(urq.query_insert,(row[0],))
+            mysql_connection.mydb_connection_destinationdb.commit()
+            print(row[0], " Has been inserted")
     except Exception as E:
         print(str(E))
 
