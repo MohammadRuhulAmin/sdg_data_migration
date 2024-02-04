@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyz
+*.pyzw
+*.pyc
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Package, distribution, etc.
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+
+# pipenv
+Pipfile.lock
+Pipfile.resolved
+
+# pyenv
+.python-version
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Pylint
+.pylint
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# VSCode
+.vscode/
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# PyCharm
+.idea/
+
+# Eclipse
+.project
+.pydevproject
+
+# Tornado
+logs/
+log/
