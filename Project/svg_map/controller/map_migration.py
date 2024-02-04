@@ -32,11 +32,11 @@ def districts():
         print(divisions_list)
         for division in bangladesh:
             print(division['region_id'])
-            # region_id_div = division['region_id']
-            # for district_info in dmp.mapped_district[region_id_div]:
-            #     print("-->",district_info['region_id'])
-            #     district = district_info['region_id']
-            #     print(smp.svg_map[district])
+            region_id_div = division['region_id']
+            for district_info in dmp.mapped_district[region_id_div]:
+                print("-->",district_info['region_id'])
+                district = district_info['region_id']
+                print(smp.svg_map[district])
 
 
 
