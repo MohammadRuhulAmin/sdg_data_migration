@@ -24,7 +24,6 @@ def divisions():
     except Exception as E:
         print(str(E))
 
-
 def districts():
     try:
         bangladesh = dmp.mapped_district['bangladesh']
@@ -37,12 +36,9 @@ def districts():
                 print("-->",district_info['region_id'])
                 district = district_info['region_id']
                 print(smp.svg_map[district])
-
-
-
-
     except Exception as E:
         print(str(E))
+
 
 if __name__ == "__main__":
     #country()
