@@ -1,6 +1,6 @@
 
 mapped_query = """
-SELECT temp1.ind_id,temp1.ind_def_id,temp2.type_id disagg_type_id,temp1.disagg_id,temp1.disagg_name
+SELECT DISTINCT temp1.disagg_name, temp1.ind_id,temp1.ind_def_id,temp2.type_id disagg_type_id,temp1.disagg_id,temp1.disagg_name
 FROM (SELECT ind.ind_id,ind.ind_def_id,idd.disagg_id,idd.disagg_name
 FROM sdg_indicator_details sid
 LEFT JOIN indicator_data ind ON ind.ind_id = sid.indicator_id
@@ -11,9 +11,11 @@ LEFT JOIN (SELECT dn.type_id,dn.name FROM disaggregation_name dn)temp2
 ON temp1.disagg_name = temp2.name;
 """
 
+
+
 indicator_number_list = """
 SELECT DISTINCT indicator_number FROM sdg_indicator_details 
-WHERE language_id = 1 and indicator_number <> "";
+WHERE indicator_number = "1.1.1" and language_id = 1 and indicator_number <> "";
 """
 
 

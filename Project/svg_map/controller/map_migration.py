@@ -25,6 +25,12 @@ def divisions():
         print(str(E))
 
 
+def districts():
+    try:
+        print()
+    except Exception as E:
+        print(str(E))
+
 if __name__ == "__main__":
     #country()
     divisions()

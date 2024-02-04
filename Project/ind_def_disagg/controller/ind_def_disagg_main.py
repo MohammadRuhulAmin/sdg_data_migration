@@ -20,7 +20,7 @@ def ind_def_disagg():
             cursor_dest.execute(mq.mapped_query,(indicator_number[0],))
             rows = cursor_dest.fetchall()
             for row in rows:
-                ind_id,ind_def_id,disagg_type_id,disagg_id,disagg_name = row[:5]
+                ind_id,ind_def_id,disagg_type_id,disagg_id,disagg_name = row[1:6]
                 temp_tuple = (ind_id,ind_def_id,disagg_type_id,disagg_id,disagg_name,)
                 cursor_dest.execute(mq.insert_into_ind_def_disagg,temp_tuple)
                 mysql_connection.mydb_connection_destinationdb.commit()
