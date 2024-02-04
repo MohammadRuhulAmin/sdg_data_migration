@@ -18,11 +18,13 @@ def divisions():
         bangladesh = mapping_district['bangladesh']
         for division in bangladesh:
             temp_div = division['region_id']
-            print(smp.svg_map[temp_div])
+            cursor.execute(iq.divisions,(1,temp_div,smp.svg_map[temp_div]))
+            mysql_connection.mydb_connection_sdg_map.commit()
+            print(temp_div, "has been inserted Successfully!")
     except Exception as E:
         print(str(E))
 
 
 if __name__ == "__main__":
-    country()
-    # divisions()
+    #country()
+    divisions()
