@@ -50,9 +50,7 @@ def districts():
     except Exception as E:
         print(str(E))
 
-
-
 if __name__ == "__main__":
-    #country()
-    #divisions()
+    country()
+    divisions()
     districts()
