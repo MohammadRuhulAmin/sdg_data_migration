@@ -75,8 +75,6 @@ def operation_mapped_data(serial_no_list):
                         if temp_json.get('disaggregation_id') == 1:
                             id.indicator_data(temp_json)
                             igd.indicator_geo_data(temp_json)
-
-
                 except Exception as E:continue
     except Exception as E:
         print(str(E))
