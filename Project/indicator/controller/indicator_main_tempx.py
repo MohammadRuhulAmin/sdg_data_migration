@@ -68,11 +68,13 @@ def operation_mapped_data(serial_no_list):
                         'geo_upazila_id':geo_upazila_id
                     }
                     if temp_json.get('is_location') == 0:
-                        if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
-                        else:idd.indicator_disagg_data(temp_json)
+                        # if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
+                        # else:idd.indicator_disagg_data(temp_json)
+                        print("ok")
                     if temp_json.get('is_location') != 0:
-                        if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
-                        else:igd.indicator_geo_data(temp_json)
+                        if temp_json.get('disaggregation_id') == 1:
+                            id.indicator_data(temp_json)
+                            igd.indicator_geo_data(temp_json)
 
 
                 except Exception as E:continue
