@@ -2,6 +2,7 @@ from indicator_data import ind_data_values
 
 def indicator_geo_data(temp_json):
     try:
+        print(temp_json)
         type = None
         ind_data_id = ind_data_values['ind_data_id']
         geo_division_id = temp_json.get('geo_division_id')

@@ -30,7 +30,8 @@ def operation_mapped_data(serial_no_list):
             for row in rows:
                 try:
                     serial_no, disaggregation_id, data_value, data_period, disagg_name, source_id, type_name, status, publish,created_at,\
-                    updated_at,is_location,geo_division_id,geo_district_id,geo_upazila_id = row[:16]
+                    updated_at,is_location,geo_division_id,geo_division_name,geo_district_id,geo_district_name,geo_upazila_id,\
+                    geo_upazila_name= row[:19]
                     if (status, publish) in status_mapping:status = status_mapping[(status, publish)]
                     cursor_dest.execute(indi_id.get_indicator_id, (serial_no,))
                     indicator_id_list = cursor_dest.fetchall()
@@ -64,13 +65,16 @@ def operation_mapped_data(serial_no_list):
                         'updated_at':updated_at,
                         'is_location':is_location,
                         'geo_division_id':geo_division_id,
+                        'geo_division_name':geo_division_name,
                         'geo_district_id':geo_district_id,
-                        'geo_upazila_id':geo_upazila_id
+                        'geo_district_name':geo_district_name,
+                        'geo_upazila_id':geo_upazila_id,
+                        'geo_upazila_name':geo_upazila_name
                     }
                     if temp_json.get('is_location') == 0:
                         # if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
                         # else:idd.indicator_disagg_data(temp_json)
-                        print("ok")
+                        pass
                     if temp_json.get('is_location') != 0:
                         if temp_json.get('disaggregation_id') == 1:
                             id.indicator_data(temp_json)

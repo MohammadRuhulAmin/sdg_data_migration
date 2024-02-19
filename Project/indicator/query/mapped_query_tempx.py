@@ -15,7 +15,7 @@ query="""
         left join geo_upazilas gupazila on gupazila.id = sidc.geo_upazila_id
         LEFT JOIN sdg_time_periods stp ON stp.id = sid.time_period_id
         LEFT JOIN sdg_disaggregation_langs sdl ON sdl.disaggregation_id = sidc.sdg_disaggregation_id
-        WHERE sil.serial_no = "1.1.1" AND sil.language_id = 1 AND sid.status = 3 AND sid.publish IN(4,5))tmp
+        WHERE sil.serial_no = %s AND sil.language_id = 1 AND sid.status = 3 AND sid.publish IN(4,5))tmp
         LEFT JOIN(SELECT child.disaggregation_id disaggregation_id,child.language_id,child.parent_id,
         child.name disaggregation_name,parent.name type_name,parent.disaggregation_id type_id 
         FROM (SELECT id,disaggregation_id,language_id,parent_id,NAME
