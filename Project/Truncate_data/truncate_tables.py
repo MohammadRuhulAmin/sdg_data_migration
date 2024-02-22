@@ -1,7 +1,6 @@
 import Project.connection as mysql_connection
 import Project.Truncate_data.query as qry
 
-
 def Truncate_tables():
     try:
         cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()

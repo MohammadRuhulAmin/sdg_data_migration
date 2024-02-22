@@ -38,8 +38,9 @@ def indicator_geo_data(temp_json):
         temp = {
             "ind_data_id":ind_data_id,"type":type,"bbs_code":bbs_code,"data_value":data_value
         }
-        print(temp)
+
 
 
     except Exception as E:
+        print(temp_json)
         print(str(E))

@@ -71,9 +71,11 @@ def operation_mapped_data(serial_no_list):
                         'geo_upazila_id':geo_upazila_id,
                         'geo_upazila_name':geo_upazila_name
                     }
-                    if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
-                    elif(temp_json.get('disaggregation_id')>1 and temp_json.get('is_location') == 0): idd.indicator_disagg_data(temp_json)
-                    elif(temp_json.get('disaggregation_id') == 1 and temp_json.get('is_location') == 1): igd.indicator_geo_data(temp_json)
+                    if temp_json.get('is_location') == 0:
+                        if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
+                        else:idd.indicator_disagg_data(temp_json)
+                    if temp_json.get('is_location') == 1:
+                        igd.indicator_geo_data(temp_json)
 
                 except Exception as E:continue
     except Exception as E:
