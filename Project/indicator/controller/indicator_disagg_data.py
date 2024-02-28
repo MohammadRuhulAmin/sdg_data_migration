@@ -1,4 +1,4 @@
-from indicator_data import ind_data_values
+from Project.indicator.controller.indicator_data import ind_data_values
 import Project.connection as mysql_connection
 import Project.indicator.query.get_indicator_id as indidc
 import Project.indicator.query.other_queries as oq

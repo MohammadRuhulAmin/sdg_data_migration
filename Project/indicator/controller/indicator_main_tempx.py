@@ -1,5 +1,5 @@
-from indicator_data import indicator_data
-from indicator_disagg_data import indicator_disagg_data
+import Project.indicator.controller.indicator_data as id
+import Project.indicator.controller.indicator_disagg_data as idd
 import Project.indicator.query.mapped_query_tempx as qmap
 import Project.indicator.query.get_serial_list as sl
 import Project.indicator.query.get_indicator_id as indi_id
@@ -72,8 +72,8 @@ def operation_mapped_data(serial_no_list):
                     }
                     print(temp_json)
                     if temp_json.get('is_location') == 0:
-                        if temp_json.get('disaggregation_id') == 1:indicator_data(temp_json)
-                        else:indicator_disagg_data(temp_json)
+                        if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
+                        else:idd.indicator_disagg_data(temp_json)
                     if temp_json.get('is_location') == 1:
                         igd.indicator_geo_data(temp_json)
 

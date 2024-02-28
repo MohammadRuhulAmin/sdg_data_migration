@@ -5,7 +5,7 @@ import Project.users.controller.user_insert_main as uim
 import Project.users.controller.user_role as ur
 import Project.users.controller.user_types as ut
 import Project.create_alter_table.create_table.indicator_data.indicator_data_create as idc
-import Project.indicator.controller.indicator_main_tempx as imt
+import Project.indicator.controller.indicator_main_tempx as  imt
 
 def engine():
     try:
