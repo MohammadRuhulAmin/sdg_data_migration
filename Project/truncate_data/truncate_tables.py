@@ -14,6 +14,7 @@ def truncate_indicator():
         mysql_connection.mydb_connection_destinationdb.commit()
         print("Indicator_geo_data table truncated successfully!")
 
+
     except Exception as E:
         print(str(E))
 
@@ -34,7 +35,18 @@ def truncate_user():
     except Exception as E:
         print(str(E))
 
-
+def truncate_disaggregation():
+    try:
+        cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
+        cursor_dest.execute(qry.truncate_disaggregation_name)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("disaggregation_name table truncated successfully!")
+        cursor_dest.execute(qry.truncate_disaggregation_type)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("disaggregation_type table truncated successfully!")
+    except Exception as E:
+        print(str(E))
 if __name__ == "__main__":
     truncate_indicator()
     truncate_user()
+    truncate_disaggregation()

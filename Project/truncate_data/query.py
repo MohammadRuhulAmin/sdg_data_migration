@@ -11,6 +11,7 @@ truncate_indicator_geo_data = """
 TRUNCATE TABLE indicator_geo_data;
 """
 
+
 truncate_users = """
 truncate table users
 """
@@ -21,4 +22,13 @@ truncate table user_types
 
 truncate_user_role = """
 truncate table user_role
+"""
+
+
+truncate_disaggregation_name = """
+truncate table disaggregation_name
+"""
+
+truncate_disaggregation_type = """
+truncate table disaggregation_type
 """
