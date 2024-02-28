@@ -21,6 +21,7 @@ def get_serial_no_from_exist_db():
 
 def operation_mapped_data(serial_no_list):
     try:
+
         cursor_source = mysql_connection.mydb_connection_sourcedb.cursor()
         cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
         for serial_no in serial_no_list:

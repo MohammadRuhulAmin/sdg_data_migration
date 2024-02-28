@@ -1,7 +1,7 @@
 import Project.connection as mysql_connection
-import Project.Truncate_data.query as qry
+import Project.truncate_data.query as qry
 
-def Truncate_tables():
+def truncate_indicator():
     try:
         cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
         cursor_dest.execute(qry.truncate_indicator_data)
@@ -18,5 +18,23 @@ def Truncate_tables():
         print(str(E))
 
 
+def truncate_user():
+    try:
+        cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
+        cursor_dest.execute(qry.truncate_users)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("users table truncated successfully!")
+        cursor_dest.execute(qry.truncate_user_role)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("user_role table truncated successfully!")
+        cursor_dest.execute(qry.truncate_user_type)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("user_type table truncated successfully!")
+
+    except Exception as E:
+        print(str(E))
+
+
 if __name__ == "__main__":
-    Truncate_tables()
+    truncate_indicator()
+    truncate_user()

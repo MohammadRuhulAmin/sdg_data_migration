@@ -40,7 +40,6 @@ def operation_mapped_data(serial_no_list):
                     new_source_id = cursor_dest.fetchall()[0][3]
                     # getting ind_def_id
                     # getting ind_def_id from ind_definitions table
-
                     temp_ind_def_id_list = []
                     temp_indicator_id_list = []
                     for indicator_id in indicator_id_list:
@@ -71,6 +70,7 @@ def operation_mapped_data(serial_no_list):
                         'geo_upazila_id':geo_upazila_id,
                         'geo_upazila_name':geo_upazila_name
                     }
+                    print(temp_json)
                     if temp_json.get('is_location') == 0:
                         if temp_json.get('disaggregation_id') == 1:id.indicator_data(temp_json)
                         else:idd.indicator_disagg_data(temp_json)
