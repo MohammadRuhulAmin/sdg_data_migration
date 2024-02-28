@@ -11,6 +11,9 @@ truncate_indicator_geo_data = """
 TRUNCATE TABLE indicator_geo_data;
 """
 
+drop_indicator_data = """
+drop table indicator_data
+"""
 
 truncate_users = """
 truncate table users
