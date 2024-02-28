@@ -77,6 +77,7 @@ def operation_mapped_data(serial_no_list):
                     if temp_json.get('is_location') == 1:
                         igd.indicator_geo_data(temp_json)
 
+
                 except Exception as E:continue
     except Exception as E:
         print(str(E))
