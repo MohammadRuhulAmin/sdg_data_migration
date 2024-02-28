@@ -158,8 +158,6 @@ def source_rapper():
     update_office_agencies_id()
     update_survey_id()
 
-    mysql_connection.mydb_connection_sourcedb.close()
-    mysql_connection.mydb_connection_destinationdb.close()
 
 if __name__ == "__main__":
     source_rapper()

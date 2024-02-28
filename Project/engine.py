@@ -12,7 +12,7 @@ import Project.create_alter_table.alter_operation.after_migration.users as au
 def engine():
     try:
         # step1: alter all the necessary tables
-        bu.alter_users()
+        bu.combine_user_alfter()
         # step2: truncate all the tables
         tt.truncate_rapper()
         # step3 : create indicator_data table
@@ -24,6 +24,7 @@ def engine():
         ur.get_all_user_role()
         ut.new_user_type()
         # step6: indicator entry
+        au.combine_user()
 
 
 

@@ -53,8 +53,10 @@ def alter_user_type():
     except Exception as E:
         print(str(E))
 
-
-if __name__ == "__main__":
+def combine_user_alfter():
     alter_users()
     alter_user_role()
     alter_user_type()
+
+if __name__ == "__main__":
+    combine_user_alfter()
