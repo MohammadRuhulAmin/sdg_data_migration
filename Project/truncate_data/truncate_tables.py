@@ -55,8 +55,11 @@ def drop_indicator_data():
         print(str(E))
 
 
-if __name__ == "__main__":
+def truncate_rapper():
     truncate_indicator()
     truncate_user()
     truncate_disaggregation()
     drop_indicator_data()
+
+if __name__ == "__main__":
+    truncate_rapper()

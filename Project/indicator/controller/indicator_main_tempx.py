@@ -81,6 +81,9 @@ def operation_mapped_data(serial_no_list):
     except Exception as E:
         print(str(E))
 
-if __name__ == "__main__":
+def indicator_rapper_main():
     serial_no_list = get_serial_no_from_exist_db()
     operation_mapped_data(serial_no_list)
+
+if __name__ == "__main__":
+    indicator_rapper_main()

@@ -1,6 +1,7 @@
 import Project.connection as mysql_connection
 import Project.users.controller.get_user_info as gui
 import Project.users.query.user_mapped as umq
+
 def get_indicator():
     cursor_srs = mysql_connection.mydb_connection_sourcedb.cursor()
     cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()

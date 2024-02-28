@@ -5,6 +5,7 @@ import Project.sources.query.office_agency as oaq
 import Project.sources.query.survay as sq
 import Project.sources.query.sources as sourcesqry
 import Project.sources.query.ind_sources as inds
+import Project.sources.query.mapped_sources as ms
 
 def insert_source_name():
     cursor_src = mysql_connection.mydb_connection_sourcedb.cursor()
@@ -41,7 +42,6 @@ def row_modification(position_index):
     cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
     modified_string_list = []
     try:
-
         cursor_dest.execute(inds.get_name_query)
         data = cursor_dest.fetchall()
         for row in data:
@@ -132,12 +132,34 @@ def update_ministry_id():
     except Exception as E:
         print(str(E))
 
+def mapped_sources():
+    try:
+        cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
+        cursor_dest.execute(ms.drop_mapped_sources)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("mapped_table dropped if exist")
+        cursor_dest.execute(ms.table_create_mapped_sources)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("mapped_sources table created successfully!")
 
-if __name__ == "__main__":
+        cursor_dest.execute(ms.insert_mapped_sources)
+        mysql_connection.mydb_connection_destinationdb.commit()
+        print("mapped_sources table inserted successfully!")
+
+    except Exception as E:
+        print(str(E))
+
+
+def source_rapper():
+    mapped_sources()
     insert_source_name()
     update_ministry_id()
     update_ministry_division_id()
     update_office_agencies_id()
     update_survey_id()
+
     mysql_connection.mydb_connection_sourcedb.close()
     mysql_connection.mydb_connection_destinationdb.close()
+
+if __name__ == "__main__":
+    source_rapper()
