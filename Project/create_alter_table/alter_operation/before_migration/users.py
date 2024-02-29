@@ -13,7 +13,6 @@ def alter_users():
         mysql_connection.mydb_connection_destinationdb.commit()
         print("users table has been altered for data migration")
 
-
     except Exception as E:
         print(str(E))
 
