@@ -23,7 +23,7 @@ CREATE TABLE `indicator_data` (
   `updated_at` datetime DEFAULT NULL,
   `updated_by` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 
 
 """

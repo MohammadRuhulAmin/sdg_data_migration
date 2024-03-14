@@ -7,6 +7,8 @@ import Project.connection as mysql_connection
 import Project.indicator.query.other_queries as oq
 import Project.indicator.controller.indicator_geo_data as igd
 
+global temp_json
+
 status_mapping = {(3, 4): 1, (4, 4): 2, (5, 4): 3, (5, 5): 4}
 def get_serial_no_from_exist_db():
     try:
@@ -22,6 +24,7 @@ def get_serial_no_from_exist_db():
 
 def operation_mapped_data(serial_no_list):
     try:
+        temp_json = {}
         cursor_source = mysql_connection.mydb_connection_sourcedb.cursor()
         cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
         for serial_no in serial_no_list:
@@ -76,11 +79,17 @@ def operation_mapped_data(serial_no_list):
                         else:idd.indicator_disagg_data(temp_json)
                     if temp_json.get('is_location') == 1:
                         igd.indicator_geo_data(temp_json)
-
-
-                except Exception as E:continue
+                except Exception as E:
+                    with open('log.txt','a') as f:
+                        f.write("error_table:indicator_data")
+                        f.write(str(temp_json)+"\n")
+                        f.write(str(E) + "\n")
+                    continue
     except Exception as E:
         print(str(E))
+        with open('log.txt','a') as f:
+            f.write(str(E) + "\n")
+
 
 def indicator_rapper_main():
     serial_no_list = get_serial_no_from_exist_db()

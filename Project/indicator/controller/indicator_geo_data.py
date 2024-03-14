@@ -38,9 +38,10 @@ def indicator_geo_data(temp_json):
         temp = {
             "ind_data_id":ind_data_id,"type":type,"bbs_code":bbs_code,"data_value":data_value
         }
-
-
-
     except Exception as E:
         print(temp_json)
         print(str(E))
+        with open("log.txt",'a') as f:
+            f.write("error_table:indicator_geo_data" + "\n")
+            f.write(str(temp_json)+"\n")
+            f.write(str(E) + "\n")

@@ -1,3 +1,5 @@
+import json
+
 import indicator_data as id
 import indicator_disagg_data as idd
 import Project.indicator.query.mapped_query as qmap
@@ -21,7 +23,7 @@ def get_serial_no_from_exist_db():
 
 def operation_mapped_data(serial_no_list):
     try:
-
+        temp_json = {}
         cursor_source = mysql_connection.mydb_connection_sourcedb.cursor()
         cursor_dest = mysql_connection.mydb_connection_destinationdb.cursor()
         for serial_no in serial_no_list:
@@ -65,8 +67,8 @@ def operation_mapped_data(serial_no_list):
                     print(temp_json)
                     if disaggregation_id == 1:id.indicator_data(temp_json)
                     else:idd.indicator_disagg_data(temp_json)
-
-                except Exception as E:continue
+                except Exception as E:
+                    continue
     except Exception as E:
         print(str(E))
 

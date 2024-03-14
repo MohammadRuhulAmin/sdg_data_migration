@@ -22,10 +22,10 @@ mydb_connection = mysql.connector.connect(
     password="ruhulamin"
 )
 
-mydb_connection_sdg_map= mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="ruhulamin",
-    database="sdg_svg_map"
-)
+# mydb_connection_sdg_map= mysql.connector.connect(
+#     host="localhost",
+#     port=3306,
+#     user="root",
+#     password="ruhulamin",
+#     database="sdg_svg_map"
+# )

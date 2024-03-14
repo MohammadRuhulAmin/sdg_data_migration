@@ -32,5 +32,9 @@ def indicator_disagg_data(temp_json):
                 mysql_connection.mydb_connection_destinationdb.commit()
             except Exception as E:
                 print(str(E))
+                with open("log.txt", 'a') as f:
+                    f.write("error_table: indicator_disagg_data"+ "\n")
+                    f.write(str(temp_json) + "\n")
+                    f.write(str(E) + "\n")
     except Exception as E:
         print(str(E))

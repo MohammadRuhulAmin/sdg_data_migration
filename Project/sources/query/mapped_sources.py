@@ -1,4 +1,4 @@
-drop_mapped_sources = """drop table mapped_sources;"""
+drop_mapped_sources = """DROP TABLE IF EXISTS mapped_sources;"""
 
 table_create_mapped_sources = """
 CREATE TABLE `mapped_sources` (
